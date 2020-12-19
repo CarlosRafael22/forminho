@@ -1,34 +1,78 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import '@testing-library/jest-dom'
+import { render, fireEvent } from '@testing-library/react';
 import InputField from '../fields/InputField';
 import Form from "./";
 
-test("Render Form", () => {
-    const inputProps = {
-        type: 'text',
-        name: 'name',
-        placeholder: 'Enter your name',
-        value: '',
-        onChange: jest.fn()
+
+describe('Render Form testing', () => {
+    const getFormTestProps = ()  => {
+        const firstChildProps: InputFieldProps = {
+            type: 'text',
+            name: 'firstName',
+            placeholder: 'Enter your first name',
+            value: '',
+            onChange: jest.fn()
+        };
+    
+        const child1 = <InputField {...firstChildProps} />;
+        const secondChildProps = {...firstChildProps, name: 'lastName', placeholder: 'Enter your last name'};
+        const child2 = <InputField {...secondChildProps} />;
+    
+        const formProps = {
+            initialValues: {
+                firstName: 'Test',
+                lastName: 'Done'
+            },
+            onSubmitHandler: jest.fn(),
+            children: [child1, child2]
+        };
+
+        return { formProps, firstChildProps, secondChildProps };
     };
 
-    const child1 = <InputField {...inputProps} />;
-    const secondProps = {...inputProps, placeholder: 'Enter'};
-    const child2 = <InputField {...secondProps} />;
+    test("It should render InputFields passed", () => {
+        const { formProps, firstChildProps, secondChildProps } = getFormTestProps();
+        const wrapper = render(
+            <Form {...formProps} />
+        )
+        expect(wrapper.queryByPlaceholderText(firstChildProps.placeholder as string)).not.toBeNull();
+        expect(wrapper.queryByPlaceholderText(secondChildProps.placeholder)).not.toBeNull();
+    });
 
-    const props = {
-        initialValues: {
-            email: '',
-            name: ''
-        },
-        onSubmitHandler: jest.fn(),
-        children: [child1, child2]
-    };
-    const wrapper = render(
-        <Form {...props} />
-    )
-    expect(wrapper.queryByPlaceholderText(inputProps.placeholder)).not.toBeNull();
-    // expect(wrapper.queryByText(props.label)).not.toBeNull();
-    // expect(wrapper.queryByText(props.helpText)).not.toBeNull();
-    // expect(wrapper.queryByDisplayValue(props.value)).not.toBeNull();
+    test('It should render InputFields with their initialValues', () => {
+        const { formProps, firstChildProps, secondChildProps } = getFormTestProps();
+        const { getByPlaceholderText } = render(
+            <Form {...formProps} />
+        );
+
+        expect(getByPlaceholderText(firstChildProps.placeholder as string)).toHaveValue(formProps.initialValues.firstName);
+        expect(getByPlaceholderText(secondChildProps.placeholder as string)).toHaveValue(formProps.initialValues.lastName);
+    })
+
+    test('It should call onSubmitHandler with the InputFields values when submitting the form', () => {
+        const { formProps, firstChildProps, secondChildProps } = getFormTestProps();
+        const { getByRole, getByPlaceholderText } = render(
+            <Form {...formProps} />
+        );
+
+        const button = getByRole('button');
+        const firstInput = getByPlaceholderText(firstChildProps.placeholder as string);
+        const secondInput = getByPlaceholderText(secondChildProps.placeholder as string);
+        const expectedValues = {
+            firstName: 'New',
+            lastName: 'Values'
+        };
+
+        // GIVEN
+        // The user has typed on inputs
+        fireEvent.change(firstInput, { target: { value: expectedValues.firstName}});
+        fireEvent.change(secondInput, { target: { value: expectedValues.lastName}});
+
+        // WHEN
+        fireEvent.click(button);
+
+        // THEN
+        expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith(expectedValues);
+    })
 });

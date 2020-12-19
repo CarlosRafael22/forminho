@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { InputFieldProps } from '../fields/InputField';
 
 export type initialValuesType = {
     [key: string]: any
@@ -28,8 +29,8 @@ const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType)
         console.log('SUBMIT')
         console.log(event)
         console.log(event.target)
-        console.log(event.target.elements)
-        console.log(event.target.elements.email)
+        // console.log(event.target.elements)
+        // console.log(event.target.elements.email)
         onSubmitHandler(values);
     }
 
@@ -47,17 +48,26 @@ interface FormProps extends FormHandlerHookType {
 const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
     const formHandler = useValuesHandler({initialValues, onSubmitHandler});
 
-    const childrenWithFormProps = React.Children.map(children, child => {
+    const childrenWithFormProps = React.Children.map(children, (child: React.ReactElement<any>) => {
         if (React.isValidElement(child)) {
             console.log('CHILD')
             console.log(child.props)
-            const propName = child.props.name;
+            // child.props.name gives Object of type 'unknown' error since we dont know what the the props are
+            // This error doesnt let the project build, to fix this we need to use Type Assertion
+            // A workaround to use Type Assertion on destructing is as follow:
+            // https://github.com/microsoft/TypeScript/issues/18229
+            const { props } = child as { props: InputFieldProps};
+            const propName = props.name;
+            // const { name } = child.props;
             const newChild = React.cloneElement(child, {
                 onChange: formHandler.onChangeHandler,
-                value: formHandler.values[propName]});
+                value: formHandler.values[propName]
+            } as Partial<InputFieldProps> );
             console.log(newChild.props)
             return newChild;
-        };
+        } else {
+            return null;
+        }
     })
 
     return (

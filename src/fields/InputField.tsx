@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 
-type InputFieldProps = {
+export type InputFieldProps = {
     type: string,
     name: string,
     placeholder?: string,

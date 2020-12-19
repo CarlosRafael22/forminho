@@ -1,11 +1,7 @@
-import * as React from "react";
+import Form from './form';
+import InputField from './fields/InputField';
 
-type Props = { text: string };
-
-export default class ExampleComponent extends React.Component<Props> {
-  render() {
-    const { text } = this.props;
-
-    return <div style={{ color: "red" }}>Hello {text}</div>;
-  }
-}
+export {
+  Form,
+  InputField
+};

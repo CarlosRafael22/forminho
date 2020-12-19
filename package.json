@@ -19,6 +19,7 @@
   "author": "Carlos Rafael Leitão",
   "license": "ISC",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@types/jest": "^26.0.19",
     "@types/react": "^17.0.0",

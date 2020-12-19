@@ -1,12 +1,4 @@
-import React, { ChangeEvent } from 'react';
-
-export type InputFieldProps = {
-    type: string,
-    name: string,
-    placeholder?: string,
-    value?: string,
-    onChange?: (event: ChangeEvent) => void
-};
+import React from 'react';
 
 const InputField = ({type, name, value, placeholder, onChange}: InputFieldProps) => (
     <div className="form-group">

@@ -1,14 +1,4 @@
 import React, { useState } from 'react';
-import { InputFieldProps } from '../fields/InputField';
-
-export type initialValuesType = {
-    [key: string]: any
-}
-
-type FormHandlerHookType = {
-    initialValues: initialValuesType,
-    onSubmitHandler: Function
-}
 
 const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType) => {
     const [values, setValues] = useState(initialValues);
@@ -39,10 +29,6 @@ const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType)
         onChangeHandler,
         submitHandler
     };
-}
-
-interface FormProps extends FormHandlerHookType {
-    children: Array<React.ReactElement>
 }
 
 const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {

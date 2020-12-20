@@ -1,9 +1,9 @@
 import React from 'react';
-import { InputDiv } from './styles';
+import { InputDiv, StyledLabel } from './styles';
 
-const InputField = ({type, name, value, placeholder, onChange}: InputFieldProps) => (
+const InputField = ({type, name, value, placeholder, onChange, label}: InputFieldProps) => (
     <div className="form-group">
-        {/* <label htmlFor={`${name}-input`}>{label}</label> */}
+        {label && <StyledLabel htmlFor={`${name}-input`}>{label}</StyledLabel>}
         <InputDiv name={name} type={type} id={name} aria-describedby={`${name}-help`} aria-label={name}
             placeholder={placeholder} value={value} onChange={onChange} />
             {/* placeholder={placeholder} value={value} onChange={(event) => onChange(event.target.value)} /> */}

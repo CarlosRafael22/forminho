@@ -50,6 +50,7 @@ describe('Render Form testing', () => {
         expect(getByPlaceholderText(secondChildProps.placeholder as string)).toHaveValue(formProps.initialValues.lastName);
     })
 
+    // This also test the logic of the custom hook since we are testing whether the values were saved on the hook state
     test('It should call onSubmitHandler with the InputFields values when submitting the form', () => {
         const { formProps, firstChildProps, secondChildProps } = getFormTestProps();
         const { getByRole, getByPlaceholderText } = render(
@@ -75,4 +76,5 @@ describe('Render Form testing', () => {
         // THEN
         expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith(expectedValues);
     })
+
 });

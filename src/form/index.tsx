@@ -4,10 +4,10 @@ const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType)
     const [values, setValues] = useState(initialValues);
 
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('CHANGE')
-        console.log(event.target)
-        console.log(event.target.value)
-        console.log(event.target.name)
+        // console.log('CHANGE')
+        // console.log(event.target)
+        // console.log(event.target.value)
+        // console.log(event.target.name)
         setValues({
             ...values,
             [event.target.name]: event.target.value
@@ -16,9 +16,9 @@ const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType)
 
     const submitHandler = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('SUBMIT')
-        console.log(event)
-        console.log(event.target)
+        // console.log('SUBMIT')
+        // console.log(event)
+        // console.log(event.target)
         // console.log(event.target.elements)
         // console.log(event.target.elements.email)
         onSubmitHandler(values);

@@ -18,3 +18,8 @@ type InputFieldProps = {
     value?: string,
     onChange?: (event: React.ChangeEvent) => void
 };
+
+type ButtonProps = {
+    text?: string,
+    style?: { [key: string]: string }
+};

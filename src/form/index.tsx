@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// import './form.css';
+import Button from '../button';
 
 const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType) => {
     const [values, setValues] = useState(initialValues);
@@ -63,7 +65,7 @@ const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                 <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
             </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <Button />
         </form>
     )
 };

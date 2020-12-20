@@ -16,7 +16,8 @@ type InputFieldProps = {
     name: string,
     placeholder?: string,
     value?: string,
-    onChange?: (event: React.ChangeEvent) => void
+    onChange?: (event: React.ChangeEvent) => void,
+    label?: string
 };
 
 type ButtonProps = {

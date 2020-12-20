@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Form from '../../form';
-import { withoutPlaceholder, withPlaceholder } from '../fields/InputField.stories';
+import { withoutPlaceholder, withPlaceholder, withLabel, withLabelAndPlaceholder } from '../fields/InputField.stories';
 import InputField from '../../fields/InputField';
 
 export default {
@@ -9,24 +9,9 @@ export default {
     component: Form
 } as Meta;
 
-// const Template: Story<FormProps> = (args) => (
-//     <Form {...args}></Form>
-// );
+type TemplateProps = {items: Array<InputFieldProps>, args: FormHandlerHookType};
 
-// export const withoutFields = Template.bind({});
-// withoutFields.args = {
-//     initialValues: {name:''},
-//     onSubmitHandler: () => {}
-// };
-
-// export const withFields = Template.bind({});
-// withFields.args = {
-//     initialValues: {name:''},
-//     onSubmitHandler: () => {},
-//     children: [<withPlaceholder {...withPlaceholder.args} />, <withPlaceholder {...withPlaceholder.args} />]
-// };
-
-const Template = ({items, ...args}: {items: Array<InputFieldProps>, args: FormProps}) => (
+const Template: Story<TemplateProps> = ({items, ...args}: TemplateProps) => (
     <Form {...args}>
         {
             items.map((item: InputFieldProps) => (
@@ -36,17 +21,31 @@ const Template = ({items, ...args}: {items: Array<InputFieldProps>, args: FormPr
     </Form>
 );
 
-export const withoutFields = Template.bind({});
-withoutFields.args = {
+const defaultArgs = {
     initialValues: {name:''},
     onSubmitHandler: () => {},
+};
+
+export const withoutFields = Template.bind({});
+withoutFields.args = {
+    ...defaultArgs,
     items: []
 };
 
 export const withFields = Template.bind({});
 withFields.args = {
-    initialValues: {name:''},
-    onSubmitHandler: () => {},
-    items: [withPlaceholder.args]
+    ...defaultArgs,
+    items: [withPlaceholder.args, withoutPlaceholder.args]
 };
 
+export const withFieldsAndLabels = Template.bind({});
+withFieldsAndLabels.args = {
+    ...defaultArgs,
+    items: [withLabel.args, withLabel.args]
+};
+
+export const withFieldsAndLabelsAndPlaceholders = Template.bind({});
+withFieldsAndLabelsAndPlaceholders.args = {
+    ...defaultArgs,
+    items: [withLabelAndPlaceholder.args, withLabelAndPlaceholder.args]
+};

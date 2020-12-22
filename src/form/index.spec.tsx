@@ -6,6 +6,9 @@ import Form from "./";
 
 
 describe('Render Form testing', () => {
+    const error1Message = 'First name is required';
+    const error2Message = 'Last name is required';
+
     const getFormTestProps = ()  => {
         const firstChildProps: InputFieldProps = {
             type: 'text',
@@ -21,11 +24,18 @@ describe('Render Form testing', () => {
     
         const formProps = {
             initialValues: {
-                firstName: 'Test',
-                lastName: 'Done'
+                firstName: '',
+                lastName: ''
             },
             onSubmitHandler: jest.fn(),
-            children: [child1, child2]
+            children: [child1, child2],
+            onValidationHandler: jest.fn((values: initialValuesType) => {
+                if(!values.firstName) {
+                    throw Error(error1Message);
+                } else if(!values.lastName) {
+                    throw Error(error2Message);
+                }
+            })
         };
 
         return { formProps, firstChildProps, secondChildProps };
@@ -75,6 +85,32 @@ describe('Render Form testing', () => {
 
         // THEN
         expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith(expectedValues);
-    })
+    });
+
+    test('It should call onValidationHandler after clicking on submit if it was passed as props', () => {
+        const { formProps, } = getFormTestProps();
+        const { getByRole } = render(
+            <Form {...formProps} />
+        );
+        // GIVEN
+        const button = getByRole('button');
+        // WHEN
+        fireEvent.click(button);
+        // THEN
+        expect(formProps.onValidationHandler).toBeCalledWith(formProps.initialValues);
+    });
+
+    test('It should show error alert if onValidationHandler failed', () => {
+        const { formProps, } = getFormTestProps();
+        const { getByRole, getByText } = render(<Form {...formProps} />);
+        // GIVEN
+        const button = getByRole('button');
+        // WHEN
+        fireEvent.click(button);
+        // THEN
+        expect(formProps.onValidationHandler).toBeCalledWith(formProps.initialValues);
+        expect(getByRole('alert')).toBeTruthy();
+        expect(getByText(error1Message)).toBeTruthy();
+    });
 
 });

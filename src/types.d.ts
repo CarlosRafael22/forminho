@@ -2,6 +2,10 @@ type initialValuesType = {
     [key: string]: any
 }
 
+type cssObject = {
+    [key: string]: string
+}
+
 type FormHandlerHookType = {
     initialValues: initialValuesType,
     onSubmitHandler: Function,
@@ -22,18 +26,19 @@ interface FormProps extends FormHandlerHookType {
 type InputFieldProps = {
     type: string,
     name: string,
+    value: string,
     placeholder?: string,
-    value?: string,
     onChange?: (event: React.ChangeEvent) => void,
-    label?: string
+    label?: string,
+    style?: cssObject
 };
 
 type ButtonProps = {
     text?: string,
-    style?: { [key: string]: string }
+    style?: cssObject
 };
 
 type AlertProps = {
     text: string,
-    style?: { [key: string]: string }
+    style?: cssObject
 };

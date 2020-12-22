@@ -1,10 +1,10 @@
 import React from 'react';
 import { InputDiv, StyledLabel } from './styles';
 
-const InputField = ({type, name, value, placeholder, onChange, label}: InputFieldProps) => (
-    <div className="form-group">
+const InputField = ({type, name, value, placeholder, onChange, label, style}: InputFieldProps) => (
+    <div>
         {label && <StyledLabel htmlFor={`${name}-input`}>{label}</StyledLabel>}
-        <InputDiv name={name} type={type} id={name} aria-describedby={`${name}-help`} aria-label={name}
+        <InputDiv style={style} name={name} type={type} id={name} aria-describedby={`${name}-help`} aria-label={name}
             placeholder={placeholder} value={value} onChange={onChange} />
             {/* placeholder={placeholder} value={value} onChange={(event) => onChange(event.target.value)} /> */}
         {/* {helpText && <small id={`${name}-help`} className="form-text text-muted" data-testid='helpText'>{helpText}</small>} */}

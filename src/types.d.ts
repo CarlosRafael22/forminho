@@ -4,7 +4,15 @@ type initialValuesType = {
 
 type FormHandlerHookType = {
     initialValues: initialValuesType,
-    onSubmitHandler: Function
+    onSubmitHandler: Function,
+    onValidationHandler?: (values: initialValuesType) => void
+}
+
+type FormHandlerHookReturn = {
+    values: initialValuesType,
+    onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void,
+    submitHandler: (event: React.FormEvent) => void,
+    error?: string
 }
 
 interface FormProps extends FormHandlerHookType {
@@ -22,5 +30,10 @@ type InputFieldProps = {
 
 type ButtonProps = {
     text?: string,
+    style?: { [key: string]: string }
+};
+
+type AlertProps = {
+    text: string,
     style?: { [key: string]: string }
 };

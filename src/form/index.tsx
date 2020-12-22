@@ -20,6 +20,7 @@ const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}:
     const validatedValues = () => {
         try {
             if (onValidationHandler) onValidationHandler(values);
+            setError(undefined);
             return true;
         } catch (error) {
             setError(error.message);

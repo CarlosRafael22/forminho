@@ -1,18 +1,43 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
-import InputField from "./InputField";
+import { fireEvent, render } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { WithPlaceholder, WithLabel, WithStyle } from '../stories/fields/InputField.stories';
 
-test("create a new hello", () => {
-    const props = {
-        type: 'text',
-        name: 'name',
-        placeholder: 'Enter your name',
-        value: '',
-        onChange: jest.fn()
-    };
-    const wrapper = render(<InputField {...props} />)
-    expect(wrapper.queryByPlaceholderText(props.placeholder)).not.toBeNull();
-    // expect(wrapper.queryByText(props.label)).not.toBeNull();
-    // expect(wrapper.queryByText(props.helpText)).not.toBeNull();
-    expect(wrapper.queryByDisplayValue(props.value)).not.toBeNull();
+describe('Test InputField rendering', () => {
+    test('Should render with placeholder passed', () => {
+        const { getByPlaceholderText } = render(<WithPlaceholder {...WithPlaceholder.args} />);
+        expect(getByPlaceholderText(WithPlaceholder.args.placeholder)).toBeTruthy();
+    });
+    
+    test('Should render with label passed', () => {
+        const { getByText } = render(<WithLabel {...WithLabel.args} />);
+        expect(getByText(WithLabel.args.label)).toBeTruthy();
+    });
+
+    test('Should call onChange when input is typed', () => {
+        const props = {
+            ...WithPlaceholder.args,
+            onChange: jest.fn()
+        };
+        // GIVEN
+        const { getByPlaceholderText } = render(<WithPlaceholder {...props} />);
+        const input = getByPlaceholderText(WithPlaceholder.args.placeholder);
+
+        // WHEN
+        fireEvent.change(input, { target: { value: 'T' } });
+
+        // THEN
+        expect(props.onChange).toHaveBeenCalled();
+    });
+
+    test('Should render with custom style passed', () => {
+        const props = {
+            ...WithStyle.args,
+            style: { backgroundColor: 'red', color: 'white' },
+            onChange: jest.fn()
+        };
+        const { getByPlaceholderText } = render(<WithStyle {...props} />);
+
+        expect(getByPlaceholderText(props.placeholder)).toHaveStyle(props.style);
+    });
 });

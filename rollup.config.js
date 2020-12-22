@@ -30,16 +30,21 @@ export default {
       clean: true
     }),
     commonjs({
+      ignoreGlobal: true,
       include: ["node_modules/**"],
+      // namedExports: {
+      //   "node_modules/react/react.js": [
+      //     "Children",
+      //     "Component",
+      //     "PropTypes",
+      //     "createElement"
+      //   ],
+      //   "node_modules/react-dom/index.js": ["render"]
+      // }
       namedExports: {
-        "node_modules/react/react.js": [
-          "Children",
-          "Component",
-          "PropTypes",
-          "createElement"
-        ],
-        "node_modules/react-dom/index.js": ["render"]
-      }
+        react: Object.keys(require('react')),
+        'react-is': Object.keys(require('react-is')),
+      },
     })
   ]
 };

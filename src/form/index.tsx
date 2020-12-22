@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-// import './form.css';
 import Button from '../button';
+import Alert from '../alert';
 
-const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType) => {
+const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}: FormHandlerHookType): FormHandlerHookReturn => {
     const [values, setValues] = useState(initialValues);
+    const [error, setError] = useState(undefined);
 
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         // console.log('CHANGE')
@@ -16,6 +17,16 @@ const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType)
         });
     };
 
+    const validatedValues = () => {
+        try {
+            if (onValidationHandler) onValidationHandler(values);
+            return true;
+        } catch (error) {
+            setError(error.message);
+            return false;
+        }
+    }
+
     const submitHandler = (event: React.FormEvent) => {
         event.preventDefault();
         // console.log('SUBMIT')
@@ -23,23 +34,26 @@ const useValuesHandler = ({initialValues, onSubmitHandler}: FormHandlerHookType)
         // console.log(event.target)
         // console.log(event.target.elements)
         // console.log(event.target.elements.email)
-        onSubmitHandler(values);
+        if (validatedValues()) {
+            onSubmitHandler(values);
+        }        
     }
 
     return {
         values,
         onChangeHandler,
-        submitHandler
+        submitHandler,
+        error
     };
 }
 
-const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
-    const formHandler = useValuesHandler({initialValues, onSubmitHandler});
+const Form = ({initialValues, onSubmitHandler, onValidationHandler, children}: FormProps) => {
+    const formHandler = useValuesHandler({initialValues, onSubmitHandler, onValidationHandler});
 
     const childrenWithFormProps = React.Children.map(children, (child: React.ReactElement<any>) => {
         if (React.isValidElement(child)) {
-            console.log('CHILD')
-            console.log(child.props)
+            // console.log('CHILD')
+            // console.log(child.props)
             // child.props.name gives Object of type 'unknown' error since we dont know what the the props are
             // This error doesnt let the project build, to fix this we need to use Type Assertion
             // A workaround to use Type Assertion on destructing is as follow:
@@ -60,11 +74,12 @@ const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
 
     return (
         <form className="main-form" onSubmit={formHandler.submitHandler}>
+            {formHandler.error && <Alert text={formHandler.error} />}
             {childrenWithFormProps}
-            <div className="form-check">
+            {/* <div className="form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                 <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-            </div>
+            </div> */}
             <Button />
         </form>
     )

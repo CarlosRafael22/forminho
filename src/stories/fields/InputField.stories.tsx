@@ -16,31 +16,37 @@ const defaultArgs = {
     value: ''
 };
 
-export const withPlaceholder = Template.bind({});
-withPlaceholder.args = {
+export const WithPlaceholder = Template.bind({});
+WithPlaceholder.args = {
     ...defaultArgs,
     placeholder: 'Enter your name'
 };
 
-export const withoutPlaceholder = Template.bind({});
-withoutPlaceholder.args = {
+export const WithoutPlaceholder = Template.bind({});
+WithoutPlaceholder.args = {
     ...defaultArgs
 };
 
-export const withDefaultValue = Template.bind({});
-withDefaultValue.args = {
+export const WithDefaultValue = Template.bind({});
+WithDefaultValue.args = {
     ...defaultArgs,
     value: 'Default Value'
 };
 
-export const withLabel = Template.bind({});
-withLabel.args = {
+export const WithLabel = Template.bind({});
+WithLabel.args = {
     ...defaultArgs,
     label: 'Name'
 };
 
-export const withLabelAndPlaceholder = Template.bind({});
-withLabelAndPlaceholder.args = {
-    ...withLabel.args,
+export const WithLabelAndPlaceholder = Template.bind({});
+WithLabelAndPlaceholder.args = {
+    ...WithLabel.args,
     placeholder: 'Enter a name'
+};
+
+export const WithStyle = Template.bind({});
+WithStyle.args = {
+    ...WithLabelAndPlaceholder.args,
+    style: { backgroundColor: 'red', color: 'white' }
 };

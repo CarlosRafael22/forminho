@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Form from '../../form';
-import { withoutPlaceholder, withPlaceholder, withLabel, withLabelAndPlaceholder } from '../fields/InputField.stories';
+import { WithPlaceholder, WithLabel, WithLabelAndPlaceholder } from '../fields/InputField.stories';
 import InputField from '../../fields/InputField';
 
 export default {
@@ -26,26 +26,26 @@ const defaultArgs = {
     onSubmitHandler: () => {},
 };
 
-export const withoutFields = Template.bind({});
-withoutFields.args = {
+export const WithoutFields = Template.bind({});
+WithoutFields.args = {
     ...defaultArgs,
     items: []
 };
 
-export const withFields = Template.bind({});
-withFields.args = {
+export const WithFields = Template.bind({});
+WithFields.args = {
     ...defaultArgs,
-    items: [withPlaceholder.args, withoutPlaceholder.args]
+    items: [WithPlaceholder.args, WithPlaceholder.args]
 };
 
-export const withFieldsAndLabels = Template.bind({});
-withFieldsAndLabels.args = {
+export const WithFieldsAndLabels = Template.bind({});
+WithFieldsAndLabels.args = {
     ...defaultArgs,
-    items: [withLabel.args, withLabel.args]
+    items: [WithLabel.args, WithLabel.args]
 };
 
-export const withFieldsAndLabelsAndPlaceholders = Template.bind({});
-withFieldsAndLabelsAndPlaceholders.args = {
+export const WithFieldsAndLabelsAndPlaceholders = Template.bind({});
+WithFieldsAndLabelsAndPlaceholders.args = {
     ...defaultArgs,
-    items: [withLabelAndPlaceholder.args, withLabelAndPlaceholder.args]
+    items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args]
 };

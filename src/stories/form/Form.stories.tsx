@@ -3,25 +3,40 @@ import { Story, Meta } from '@storybook/react';
 import Form from '../../form';
 import { WithPlaceholder, WithLabel, WithLabelAndPlaceholder } from '../fields/InputField.stories';
 import InputField from '../../fields/InputField';
+import { Custom as CustomButton } from '../button/Button.stories';
+import Button from '../../button';
 
 export default {
     title: 'Example/Form',
     component: Form
 } as Meta;
 
-type TemplateProps = {items: Array<InputFieldProps>, args: FormHandlerHookType};
+interface TemplateProps extends FormHandlerHookType {
+    items: Array<InputFieldProps | ButtonProps>
+}
+
+// inerface TemplateProps extends FormHa = {items: Array<InputFieldProps | ButtonProps>, args: FormHandlerHookType};
+
+// Using Type Guard to check type of an interface
+const isInputFieldProps = (props: InputFieldProps | ButtonProps): props is InputFieldProps => {
+    return (props as InputFieldProps).name !== undefined;
+};
 
 const Template: Story<TemplateProps> = ({items, ...args}: TemplateProps) => (
     <Form {...args}>
         {
-            items.map((item: InputFieldProps) => (
-                <InputField {...item} />
-            ))
+            items.map((item: any, idx: number) => {
+                if(isInputFieldProps(item)) {
+                    return (<InputField {...item} key={idx} />)
+                } else {
+                    return (<Button {...item} key={idx} />)
+                }
+            })
         }
     </Form>
 );
 
-const defaultArgs = {
+const defaultArgs: FormHandlerHookType = {
     initialValues: {name:''},
     onSubmitHandler: () => {},
 };
@@ -48,4 +63,16 @@ export const WithFieldsAndLabelsAndPlaceholders = Template.bind({});
 WithFieldsAndLabelsAndPlaceholders.args = {
     ...defaultArgs,
     items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args]
+};
+
+export const WithSubmitButtonText = Template.bind({});
+WithSubmitButtonText.args = {
+    ...WithFieldsAndLabelsAndPlaceholders.args,
+    submitButtonText: 'Confirm submission'
+};
+
+export const WithButtonAsChild = Template.bind({});
+WithButtonAsChild.args = {
+    ...defaultArgs,
+    items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args, CustomButton.args]
 };

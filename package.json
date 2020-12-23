@@ -1,6 +1,6 @@
 {
   "name": "simple-form",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Helps creating simple forms",
   "main": "build/index.js",
   "module": "build/index.es.js",

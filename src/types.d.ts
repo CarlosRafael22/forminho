@@ -20,7 +20,8 @@ type FormHandlerHookReturn = {
 }
 
 interface FormProps extends FormHandlerHookType {
-    children: Array<React.ReactElement>
+    children: Array<React.ReactElement>,
+    submitButtonText?: string
 }
 
 type InputFieldProps = {

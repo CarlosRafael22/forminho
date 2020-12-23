@@ -46,15 +46,25 @@ const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}:
         submitHandler,
         error
     };
-}
+};
 
-const Form = ({initialValues, onSubmitHandler, onValidationHandler, children}: FormProps) => {
+
+const Form = ({initialValues, onSubmitHandler, onValidationHandler, children, submitButtonText}: FormProps) => {
     const formHandler = useValuesHandler({initialValues, onSubmitHandler, onValidationHandler});
+
+    let ButtonToRender: React.ReactElement<any>;
 
     const childrenWithFormProps = React.Children.map(children, (child: React.ReactElement<any>) => {
         if (React.isValidElement(child)) {
-            // console.log('CHILD')
-            // console.log(child.props)
+            console.log('CHILD')
+            // const { type } = child;
+            console.log(child.type)
+            if (child.type === Button) {
+                ButtonToRender = child;
+                return null;
+            }
+            console.log(child.type === Button)
+            // console.log(child.type.displayName)
             // child.props.name gives Object of type 'unknown' error since we dont know what the the props are
             // This error doesnt let the project build, to fix this we need to use Type Assertion
             // A workaround to use Type Assertion on destructing is as follow:
@@ -66,22 +76,28 @@ const Form = ({initialValues, onSubmitHandler, onValidationHandler, children}: F
                 onChange: formHandler.onChangeHandler,
                 value: formHandler.values[propName]
             } as Partial<InputFieldProps> );
-            console.log(newChild.props)
             return newChild;
         } else {
             return null;
         }
-    })
+    });
+
+    const renderButton = () => {
+        if(ButtonToRender) {
+            console.log('TEM BUTTONRENDER')
+            return (ButtonToRender)
+        } else {
+            console.log('NAO TEM BUTTON')
+            const button = submitButtonText ? <Button text={submitButtonText} /> : <Button />;
+            return button;
+        }
+    };
 
     return (
         <form className="main-form" onSubmit={formHandler.submitHandler}>
             {formHandler.error && <Alert text={formHandler.error} />}
             {childrenWithFormProps}
-            {/* <div className="form-check">
-                <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-            </div> */}
-            <Button />
+            {renderButton()}
         </form>
     )
 };

@@ -3,6 +3,7 @@ import '@testing-library/jest-dom'
 import { render, fireEvent } from '@testing-library/react';
 import InputField from '../fields/InputField';
 import Form from "./";
+import { WithButtonAsChild, WithFieldsAndLabelsAndPlaceholders, WithSubmitButtonText } from '../stories/form/Form.stories';
 
 
 describe('Render Form testing', () => {
@@ -111,6 +112,29 @@ describe('Render Form testing', () => {
         expect(formProps.onValidationHandler).toBeCalledWith(formProps.initialValues);
         expect(getByRole('alert')).toBeTruthy();
         expect(getByText(error1Message)).toBeTruthy();
+    });
+
+    test('It should render the Button with the submitButtonText props', () => {
+        const { queryByRole } = render(<WithSubmitButtonText {...WithSubmitButtonText.args} />);
+        const button = queryByRole('button');
+
+        expect(button).not.toBeNull();
+        expect(button).toHaveTextContent(WithSubmitButtonText.args.submitButtonText);
+    });
+
+    test('It should render only the Button passed as child', () => {
+        const { queryByRole } = render(<WithButtonAsChild {...WithButtonAsChild.args} />);
+        const button = queryByRole('button');
+
+        expect(button).not.toBeNull();
+    });
+
+    test('It should render the standard Button when none is passed', () => {
+        const { queryByRole } = render(<WithFieldsAndLabelsAndPlaceholders {...WithFieldsAndLabelsAndPlaceholders.args} />);
+        const button = queryByRole('button');
+
+        expect(button).not.toBeNull();
+        expect(button).toHaveTextContent('Submit');
     });
 
 });

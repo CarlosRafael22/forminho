@@ -73,16 +73,19 @@ In this section we are going to show the components and its props.
 <Form />
 ```
 ##### Props
-* initialValues: Object
+- initialValues: Object
+
 Required. Represents the initial values that every child InputField will have. Each field in the 'initialValues' must match one of the 'name' prop in the InputField of the Form.
 
-* onSubmitHandler: (values: Object) => void
+- onSubmitHandler: (values: Object) => void
+
 Required function. This props receives the function you would want to execute after the user clicks the submit button. The function receives the most recent values of the InputFields. It is called after the onValidationHandler function if this prop was provided, therefore it only executes if the validation provided had no error.
 
-* onValidationHandler: (values: Object) => void
+- onValidationHandler: (values: Object) => void
+
 Optional function. If you want to have a validation step before the onSubmitHandler you can provide this prop with a function which receives the most recent values of the InputFields.
 
-One important thing to notice is that this function show throw Error if the validation you are checking fails. The Error thrown will be caught by the function responsible to deal with errors in the Form component and then it will create an Alert on top of all the fields in the Form showing the error message. If there is no Error thrown then the validation was successful and the values will be passed to 'onSubmitHandler'
+One important thing to notice is that this function should throw Error if the validation you are checking fails. The Error thrown will be caught by the function responsible to deal with errors in the Form component and then it will create an Alert on top of all the fields in the Form showing the error message. If there is no Error thrown then the validation was successful and the values will be passed to 'onSubmitHandler'
 
-* submitButtonText: string
+- submitButtonText: string
 Optional. Represents the text of the submit button if you want it to have a different text than the default 'Submit'.

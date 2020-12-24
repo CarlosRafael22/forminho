@@ -1,10 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import Field from '../fields';
 import Form from "./";
 import { WithButtonAsChild, WithFieldsAndLabelsAndPlaceholders, WithSubmitButtonText } from '../stories/form/Form.stories';
 import { Default as DefaultSelect } from '../stories/fields/Select.stories';
+import { Default as DefaultRadio } from '../stories/fields/Radio.stories';
 
 
 describe('Render Form testing with Field.Input', () => {
@@ -176,29 +177,45 @@ describe('Form rendering tests with Field.Select', () => {
 
         expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith({ team: 'Chelsea' });
     });
+});
 
-    // test('It should save the new option value when interacting with Field.Select option', () => {
-    //     const props: SelectProps = {
-    //         ...DefaultSelect.args,
-    //         onChange: jest.fn()
-    //     };
 
-    //     const { getByText, getByRole } = render(<DefaultSelect {...props} />);
-    //     // debug();
-    //     const select = getByRole('listbox');
-    //     expect(select).toBeTruthy();
-    //     console.log(select)
+describe('Form rendering tests with Field.Radio', () => {
 
-    //     fireEvent.change(select, { target: { value: 'Chelsea' } });
-    //     console.log(select)
-    //     const chelseaOption = getByText('Chelsea') as any;
-    //     const defaultOption = getByText(props.value) as any;
-    //     const option2 = getByText('Tottenham') as any;
-    //     const option3 = getByText('West Ham') as any;
+    const getFormTestProps = ()  => {
+        const props: RadioProps = {
+            ...DefaultRadio.args,
+            onChange: jest.fn()
+        };
 
-    //     expect(chelseaOption.selected).toBeFalsy();
-    //     expect(defaultOption.selected).toBeFalsy();
-    //     expect(option2.selected).toBeFalsy();
-    //     expect(option3.selected).toBeFalsy();
-    // });
+        const radio1 = <DefaultRadio {...props} />;
+        const radio2 = <DefaultRadio {...{...props, label: 'Arsenal', value: 'Arsenal'}} />;
+        const radio3 = <DefaultRadio {...{...props, label: 'Tottenham', value: 'Tottenham'}} />;
+    
+        const formProps = {
+            initialValues: {
+                team: 'Arsenal'
+            },
+            onSubmitHandler: jest.fn(),
+            children: [radio1, radio2, radio3],
+        };
+
+        return { formProps, props };
+    };
+
+    test('It should call onSubmitHandler with the correct Field.Radio selected value when submitting the form', () => {
+        const { formProps, } = getFormTestProps();
+        render(<Form {...formProps} />);
+
+        const radios = screen.queryAllByRole('radio') as HTMLElement[];
+        const button = screen.getByRole('button');
+        expect(radios).toBeTruthy();
+
+
+        fireEvent.click(radios[1]);
+        fireEvent.click(button);
+
+        expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith({ team: 'Arsenal' });
+    });
+
 });

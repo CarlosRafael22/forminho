@@ -18,6 +18,7 @@ const Template: Story<SelectProps> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
+    type: 'select',
     name: 'team',
     value: 'Arsenal'
 };

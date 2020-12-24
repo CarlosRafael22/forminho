@@ -12,6 +12,7 @@ const Template: Story<RadioProps> = (args) => (<Field.Radio {...args} />);
 
 export const Default = Template.bind({});
 Default.args = {
+    type: 'radio',
     name: 'team',
     value: 'Chelsea',
     label: 'Chelsea'

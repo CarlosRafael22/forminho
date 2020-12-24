@@ -45,6 +45,7 @@ type AlertProps = {
 };
 
 type SelectProps = {
+    type: 'select',
     name: string,
     value: string,
     onChange: (event: React.ChangeEvent) => void,
@@ -54,6 +55,7 @@ type SelectProps = {
 };
 
 type TextAreaProps = {
+    type: 'textarea',
     name: string,
     value: string,
     onChange: (event: React.ChangeEvent) => void,
@@ -63,10 +65,23 @@ type TextAreaProps = {
 };
 
 type RadioProps = {
+    type: 'radio',
     name: string,
     value: string,
     label: string,
     onChange: (event: React.ChangeEvent) => void,
     stateValue?: string,
     style?: cssObject
-}
+};
+
+type CheckboxProps = {
+    type: 'checkbox',
+    name: string,
+    label: string,
+    onChange: (event: React.ChangeEvent) => void,
+    stateValue?: boolean,
+    style?: cssObject
+};
+
+type FieldProps = InputFieldProps | SelectProps | TextAreaProps | RadioProps | CheckboxProps;
+type ComponentProps = FieldProps | ButtonProps | AlertProps;

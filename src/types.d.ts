@@ -43,3 +43,21 @@ type AlertProps = {
     text: string,
     style?: cssObject
 };
+
+type SelectProps = {
+    name: string,
+    value: string,
+    onChange: (event: React.ChangeEvent) => void,
+    children: Array<any>,
+    label?: string,
+    style?: cssObject
+};
+
+type TextAreaProps = {
+    name: string,
+    value: string,
+    onChange: (event: React.ChangeEvent) => void,
+    placeholder?: string,
+    label?: string,
+    style?: cssObject
+};

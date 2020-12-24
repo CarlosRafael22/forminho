@@ -3,7 +3,7 @@ import { Story, Meta } from '@storybook/react';
 import Button from '../../button';
 
 export default {
-    title: 'Example/Button',
+    title: 'Simple-Form/Button',
     component: Button
 } as Meta;
 

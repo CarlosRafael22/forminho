@@ -4,7 +4,7 @@ import Alert from '../../alert';
 
 
 export default {
-    title: 'Example/Alert',
+    title: 'Simple-Form/Alert',
     component: Alert
 } as Meta;
 

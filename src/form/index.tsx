@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Button from '../button';
 import Alert from '../alert';
+import Radio from '../fields/radio';
+
 
 const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}: FormHandlerHookType): FormHandlerHookReturn => {
     const [values, setValues] = useState(initialValues);
@@ -64,6 +66,7 @@ const Form = ({initialValues, onSubmitHandler, onValidationHandler, children, su
                 return null;
             }
             console.log(child.type === Button)
+
             // console.log(child.type.displayName)
             // child.props.name gives Object of type 'unknown' error since we dont know what the the props are
             // This error doesnt let the project build, to fix this we need to use Type Assertion
@@ -72,6 +75,15 @@ const Form = ({initialValues, onSubmitHandler, onValidationHandler, children, su
             const { props } = child as { props: InputFieldProps};
             const propName = props.name;
             // const { name } = child.props;
+
+            if (child.type === Radio) {
+                const newChild = React.cloneElement(child, {
+                    onChange: formHandler.onChangeHandler,
+                    stateValue: formHandler.values[propName]
+                } as Partial<InputFieldProps> );
+                return newChild;
+            }
+
             const newChild = React.cloneElement(child, {
                 onChange: formHandler.onChangeHandler,
                 value: formHandler.values[propName]

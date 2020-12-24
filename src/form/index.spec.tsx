@@ -1,12 +1,13 @@
 import React from 'react';
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 import { render, fireEvent } from '@testing-library/react';
-import InputField from '../fields/InputField';
+import Field from '../fields';
 import Form from "./";
 import { WithButtonAsChild, WithFieldsAndLabelsAndPlaceholders, WithSubmitButtonText } from '../stories/form/Form.stories';
+import { Default as DefaultSelect } from '../stories/fields/Select.stories';
 
 
-describe('Render Form testing', () => {
+describe('Render Form testing with Field.Input', () => {
     const error1Message = 'First name is required';
     const error2Message = 'Last name is required';
 
@@ -19,9 +20,9 @@ describe('Render Form testing', () => {
             onChange: jest.fn()
         };
     
-        const child1 = <InputField {...firstChildProps} />;
+        const child1 = <Field.Input {...firstChildProps} />;
         const secondChildProps = {...firstChildProps, name: 'lastName', placeholder: 'Enter your last name'};
-        const child2 = <InputField {...secondChildProps} />;
+        const child2 = <Field.Input {...secondChildProps} />;
     
         const formProps = {
             initialValues: {
@@ -42,7 +43,7 @@ describe('Render Form testing', () => {
         return { formProps, firstChildProps, secondChildProps };
     };
 
-    test("It should render InputFields passed", () => {
+    test("It should render Field.Inputs passed", () => {
         const { formProps, firstChildProps, secondChildProps } = getFormTestProps();
         const wrapper = render(
             <Form {...formProps} />
@@ -51,7 +52,7 @@ describe('Render Form testing', () => {
         expect(wrapper.queryByPlaceholderText(secondChildProps.placeholder)).not.toBeNull();
     });
 
-    test('It should render InputFields with their initialValues', () => {
+    test('It should render Field.Inputs with their initialValues', () => {
         const { formProps, firstChildProps, secondChildProps } = getFormTestProps();
         const { getByPlaceholderText } = render(
             <Form {...formProps} />
@@ -62,7 +63,7 @@ describe('Render Form testing', () => {
     })
 
     // This also test the logic of the custom hook since we are testing whether the values were saved on the hook state
-    test('It should call onSubmitHandler with the InputFields values when submitting the form', () => {
+    test('It should call onSubmitHandler with the Field.Inputs values when submitting the form', () => {
         const { formProps, firstChildProps, secondChildProps } = getFormTestProps();
         const { getByRole, getByPlaceholderText } = render(
             <Form {...formProps} />
@@ -137,4 +138,67 @@ describe('Render Form testing', () => {
         expect(button).toHaveTextContent('Submit');
     });
 
+});
+
+
+describe('Form rendering tests with Field.Select', () => {
+
+    const getFormTestProps = ()  => {
+        const props: SelectProps = {
+            ...DefaultSelect.args,
+            onChange: jest.fn()
+        };
+
+        const select = <DefaultSelect {...props} />;
+    
+        const formProps = {
+            initialValues: {
+                team: 'Arsenal'
+            },
+            onSubmitHandler: jest.fn(),
+            children: [select],
+        };
+
+        return { formProps, props };
+    };
+
+    test('It should call onSubmitHandler with the correct Field.Select values when submitting the form', () => {
+        const { formProps, } = getFormTestProps();
+        const { getByRole } = render(
+            <Form {...formProps} />
+        );
+        const select = getByRole('listbox');
+        const button = getByRole('button');
+        expect(select).toBeTruthy();
+
+        fireEvent.change(select, { target: { value: 'Chelsea' } });
+        fireEvent.click(button);
+
+        expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith({ team: 'Chelsea' });
+    });
+
+    // test('It should save the new option value when interacting with Field.Select option', () => {
+    //     const props: SelectProps = {
+    //         ...DefaultSelect.args,
+    //         onChange: jest.fn()
+    //     };
+
+    //     const { getByText, getByRole } = render(<DefaultSelect {...props} />);
+    //     // debug();
+    //     const select = getByRole('listbox');
+    //     expect(select).toBeTruthy();
+    //     console.log(select)
+
+    //     fireEvent.change(select, { target: { value: 'Chelsea' } });
+    //     console.log(select)
+    //     const chelseaOption = getByText('Chelsea') as any;
+    //     const defaultOption = getByText(props.value) as any;
+    //     const option2 = getByText('Tottenham') as any;
+    //     const option3 = getByText('West Ham') as any;
+
+    //     expect(chelseaOption.selected).toBeFalsy();
+    //     expect(defaultOption.selected).toBeFalsy();
+    //     expect(option2.selected).toBeFalsy();
+    //     expect(option3.selected).toBeFalsy();
+    // });
 });

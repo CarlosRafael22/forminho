@@ -6,6 +6,8 @@ import Field from '../../fields';
 import { Custom as CustomButton } from '../button/Button.stories';
 import Button from '../../button';
 import { Default as DefaultSelect } from '../fields/Select.stories';
+import { Default as DefaultRadio } from '../fields/Radio.stories';
+import { Default as DefaultCheckbox } from '../fields/Checkbox.stories';
 
 export default {
     title: 'Simple-Form/Form',
@@ -16,11 +18,33 @@ interface TemplateProps extends FormHandlerHookType {
     items: Array<InputFieldProps | ButtonProps>
 }
 
-// inerface TemplateProps extends FormHa = {items: Array<InputFieldProps | ButtonProps>, args: FormHandlerHookType};
+const customInputs = ['select', 'checkbox', 'radio'];
+type customInput = typeof customInputs[number];
+
+const isCustomInput = (typeChecked: string): typeChecked is customInput => {
+    console.log('CUSTOM -> ', customInputs.includes(typeChecked), typeChecked)
+    return customInputs.includes(typeChecked);
+};
 
 // Using Type Guard to check type of an interface
-const isInputFieldProps = (props: InputFieldProps | ButtonProps): props is InputFieldProps => {
-    return (props as InputFieldProps).name !== undefined;
+const isInputFieldProps = (props: ComponentProps): props is InputFieldProps => {
+    console.log('PROPS 1-> ', props);
+    return ((props as InputFieldProps).type !== undefined) && (!isCustomInput((props as InputFieldProps).type));
+};
+
+const isSelectProps = (props: ComponentProps): props is SelectProps => {
+    console.log('PROPS 2-> ', props);
+    return (props as SelectProps).type === 'select';
+};
+
+const isRadioProps = (props: ComponentProps): props is RadioProps => {
+    console.log('PROPS 3-> ', props);
+    return (props as RadioProps).type === 'radio';
+};
+
+const isCheckboxProps = (props: ComponentProps): props is CheckboxProps => {
+    console.log('PROPS 4-> ', props);
+    return (props as CheckboxProps).type === 'checkbox';
 };
 
 const Template: Story<TemplateProps> = ({items, ...args}: TemplateProps) => (
@@ -28,7 +52,17 @@ const Template: Story<TemplateProps> = ({items, ...args}: TemplateProps) => (
         {
             items.map((item: any, idx: number) => {
                 if(isInputFieldProps(item)) {
+                    console.log('CAIU FIELD', item)
                     return (<Field.Input {...item} key={idx} />)
+                } else if(isSelectProps(item)) {
+                    console.log('CAIU SELECT, ', item)
+                    return (<Field.Select {...item} key={idx} />)
+                } else if(isRadioProps(item)) {
+                    console.log('CAIU RADIO, ', item)
+                    return (<Field.Radio {...item} key={idx} />)
+                } else if(isCheckboxProps(item)) {
+                    console.log('CAIU CHECKBOX, ', item)
+                    return (<Field.Checkbox {...item} key={idx} />)
                 } else {
                     return (<Button {...item} key={idx} />)
                 }
@@ -82,4 +116,16 @@ export const WithSelect = Template.bind({});
 WithSelect.args = {
     ...defaultArgs,
     items: [DefaultSelect.args]
+};
+
+export const WithRadio = Template.bind({});
+WithRadio.args = {
+    ...defaultArgs,
+    items: [WithPlaceholder.args, DefaultRadio.args, DefaultRadio.args]
+};
+
+export const WithCheckbox = Template.bind({});
+WithCheckbox.args = {
+    ...defaultArgs,
+    items: [WithPlaceholder.args, DefaultCheckbox.args]
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '../button';
 import Alert from '../alert';
 import Radio from '../fields/radio';
+import Checkbox from '../fields/checkbox';
 
 
 const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}: FormHandlerHookType): FormHandlerHookReturn => {
@@ -13,9 +14,11 @@ const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}:
         // console.log(event.target)
         // console.log(event.target.value)
         // console.log(event.target.name)
+        // Special case for Checkbox
+        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
         setValues({
             ...values,
-            [event.target.name]: event.target.value
+            [event.target.name]: value
         });
     };
 
@@ -77,6 +80,14 @@ const Form = ({initialValues, onSubmitHandler, onValidationHandler, children, su
             // const { name } = child.props;
 
             if (child.type === Radio) {
+                const newChild = React.cloneElement(child, {
+                    onChange: formHandler.onChangeHandler,
+                    stateValue: formHandler.values[propName]
+                } as Partial<InputFieldProps> );
+                return newChild;
+            }
+
+            if (child.type === Checkbox) {
                 const newChild = React.cloneElement(child, {
                     onChange: formHandler.onChangeHandler,
                     stateValue: formHandler.values[propName]

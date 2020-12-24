@@ -2,12 +2,13 @@ import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Form from '../../form';
 import { WithPlaceholder, WithLabel, WithLabelAndPlaceholder } from '../fields/InputField.stories';
-import InputField from '../../fields/InputField';
+import Field from '../../fields';
 import { Custom as CustomButton } from '../button/Button.stories';
 import Button from '../../button';
+import { Default as DefaultSelect } from '../fields/Select.stories';
 
 export default {
-    title: 'Example/Form',
+    title: 'Simple-Form/Form',
     component: Form
 } as Meta;
 
@@ -27,7 +28,7 @@ const Template: Story<TemplateProps> = ({items, ...args}: TemplateProps) => (
         {
             items.map((item: any, idx: number) => {
                 if(isInputFieldProps(item)) {
-                    return (<InputField {...item} key={idx} />)
+                    return (<Field.Input {...item} key={idx} />)
                 } else {
                     return (<Button {...item} key={idx} />)
                 }
@@ -75,4 +76,10 @@ export const WithButtonAsChild = Template.bind({});
 WithButtonAsChild.args = {
     ...defaultArgs,
     items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args, CustomButton.args]
+};
+
+export const WithSelect = Template.bind({});
+WithSelect.args = {
+    ...defaultArgs,
+    items: [DefaultSelect.args]
 };

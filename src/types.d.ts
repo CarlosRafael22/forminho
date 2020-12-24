@@ -61,3 +61,12 @@ type TextAreaProps = {
     label?: string,
     style?: cssObject
 };
+
+type RadioProps = {
+    name: string,
+    value: string,
+    label: string,
+    onChange: (event: React.ChangeEvent) => void,
+    stateValue?: string,
+    style?: cssObject
+}

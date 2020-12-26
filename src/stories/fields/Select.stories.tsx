@@ -27,10 +27,10 @@ Default.args = {
     name: 'team',
     value: 'Arsenal',
     children: [
-        <option value='Chelsea'>Chelsea</option>,
-        <option value='Arsenal'>Arsenal</option>,
-        <option value='Tottenham'>Tottenham</option>,
-        <option value='West Ham'>West Ham</option>
+        <option value='Chelsea' key='1'>Chelsea</option>,
+        <option value='Arsenal' key='2'>Arsenal</option>,
+        <option value='Tottenham' key='3'>Tottenham</option>,
+        <option value='West Ham' key='4'>West Ham</option>
     ]
 };
 

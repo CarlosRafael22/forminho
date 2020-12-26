@@ -1,7 +1,8 @@
-import {Form, InputField} from './';
+import {Form, Field, Button} from './';
 
 
-test('It should export Form and InputField', () => {
+test('It should export Form, Field and Button', () => {
     expect(Form).toBeDefined();
-    expect(InputField).toBeDefined();
+    expect(Field).toBeDefined();
+    expect(Button).toBeDefined();
 });

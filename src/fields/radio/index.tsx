@@ -1,7 +1,11 @@
 import React from 'react';
 
+const defaultStyle = {
+    padding: '5px'
+};
+
 const Radio = ({name, value, label, onChange, stateValue, style}: RadioProps) => (
-    <label style={style}>
+    <label style={{...defaultStyle, ...style}}>
         {label}
         <input
         type="radio"

@@ -1,9 +1,9 @@
 import Form from './form';
-import InputField from './fields/InputField';
+import Field from './fields';
 import Button from './button';
 
 export {
   Form,
-  InputField,
+  Field,
   Button
 };

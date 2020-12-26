@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { WithPlaceholder, WithLabel, WithStyle } from '../stories/fields/InputField.stories';
+import { WithPlaceholder, WithLabel, WithStyle } from '../../stories/fields/InputField.stories';
 
 describe('Test InputField rendering', () => {
     test('Should render with placeholder passed', () => {

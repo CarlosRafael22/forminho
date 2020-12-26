@@ -1,7 +1,5 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-
-// import InputField from '../../fields/InputField';
 import Field from '../../fields';
 
 export default {

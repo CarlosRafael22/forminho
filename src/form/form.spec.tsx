@@ -2,10 +2,11 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, fireEvent, screen } from '@testing-library/react';
 import Field from '../fields';
-import Form from "./";
-import { WithButtonAsChild, WithFieldsAndLabelsAndPlaceholders, WithSubmitButtonText } from '../stories/form/Form.stories';
+import Form from ".";
+import { WithButtonAsChild, WithFieldsAndLabelsAndPlaceholders, WithSubmitButtonText, WithSelect } from '../stories/form/Form.stories';
 import { Default as DefaultSelect } from '../stories/fields/Select.stories';
 import { Default as DefaultRadio } from '../stories/fields/Radio.stories';
+import { Default as DefaultCheckbox } from '../stories/fields/Checkbox.stories';
 
 
 describe('Render Form testing with Field.Input', () => {
@@ -216,6 +217,78 @@ describe('Form rendering tests with Field.Radio', () => {
         fireEvent.click(button);
 
         expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith({ team: 'Arsenal' });
+    });
+
+});
+
+
+describe('Form rendering tests with Field.Checkbox', () => {
+
+    const getFormTestProps = ()  => {
+        const checkbox = <DefaultCheckbox {...DefaultCheckbox.args} />;
+    
+        const formProps = {
+            initialValues: {
+                terms: false
+            },
+            onSubmitHandler: jest.fn(),
+            children: [checkbox],
+        };
+
+        return { formProps };
+    };
+
+    test('It should call onSubmitHandler with the Field.Checkbox state value as true after clicking on it', () => {
+        const { formProps } = getFormTestProps();
+        render(<Form {...formProps} />);
+
+        const checkbox = screen.getByRole('checkbox');
+        const button = screen.getByRole('button');
+        expect(checkbox).toBeTruthy();
+
+
+        fireEvent.click(checkbox);
+        fireEvent.click(button);
+
+        expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith({ terms: true });
+    });
+
+});
+
+describe('Form rendering tests with Field.Select', () => {
+
+    // const getFormTestProps = ()  => {
+    //     const props: CheckboxProps = {
+    //         ...DefaultCheckbox.args
+    //     };
+
+    //     const checkbox = <DefaultCheckbox {...props} />;
+    
+    //     const formProps = {
+    //         initialValues: {
+    //             terms: false
+    //         },
+    //         onSubmitHandler: jest.fn(),
+    //         children: [checkbox],
+    //     };
+
+    //     return { formProps, props };
+    // };
+
+    test('It should call onSubmitHandler with the Field.Checkbox state value as true after clicking on it', () => {
+        // const { formProps, } = getFormTestProps();
+        render(<WithSelect {...WithSelect.args} />);
+        screen.debug();
+
+        // const checkbox = screen.getByRole('checkbox');
+        // const button = screen.getByRole('button');
+        // expect(checkbox).toBeTruthy();
+
+
+        // fireEvent.click(checkbox);
+        // fireEvent.click(button);
+
+        // expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith({ terms: true });
     });
 
 });

@@ -5,7 +5,7 @@ import { WithPlaceholder, WithLabel, WithLabelAndPlaceholder } from '../fields/I
 import Field from '../../fields';
 import { Custom as CustomButton } from '../button/Button.stories';
 import Button from '../../button';
-import { Default as DefaultSelect } from '../fields/Select.stories';
+import { WithLabel as WithLabelSelect } from '../fields/Select.stories';
 import { Default as DefaultRadio } from '../fields/Radio.stories';
 import { Default as DefaultCheckbox } from '../fields/Checkbox.stories';
 
@@ -115,7 +115,7 @@ WithButtonAsChild.args = {
 export const WithSelect = Template.bind({});
 WithSelect.args = {
     ...defaultArgs,
-    items: [DefaultSelect.args]
+    items: [WithLabelSelect.args]
 };
 
 export const WithRadio = Template.bind({});

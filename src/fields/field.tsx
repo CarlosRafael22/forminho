@@ -17,16 +17,6 @@ type FieldProps = {
     render?: Function
 };
 
-export type initialValuesType = {
-    [key: string]: any
-}
-
-type contextType = {
-    inputRefs?: initialValuesType,
-    errorRefs?: initialValuesType
-};
-
-
 // interface FieldComponent extends React.ForwardRefExoticComponent<FieldProps & React.RefAttributes<HTMLElement>> {
 //     Input: React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLElement>>;
 //     Select: React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLElement>>;
@@ -39,12 +29,12 @@ type GenericHTMLInputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSele
 //   | JSX.IntrinsicElements['select']
 //   | JSX.IntrinsicElements['textarea'];
 
-const Field = React.forwardRef(({name, type, label, placeholder, style, children, onChange, value, defaultValue}: FieldProps, ref) => {
+const Field = React.forwardRef(({name, type, label, placeholder, style, children, onChange, value}: FieldProps, ref) => {
     // const element = 
     // console.log('Input ', ref)
     const inputRef = useRef<GenericHTMLInputElement>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
-    const { inputRefs, errorRefs }: contextType = useContext(FormContext) as { errorRefs: initialValuesType, inputRefs: initialValuesType };
+    const { inputRefs, errorRefs, initialValues }: ContextType = useContext(FormContext);
     console.log('CONTEXT NO INPUT ---- ', inputRefs, errorRefs)
     // const errorRef = React.useCallback(node => {
     //     if(node !== null) {
@@ -76,11 +66,11 @@ const Field = React.forwardRef(({name, type, label, placeholder, style, children
     const DOMProps = {
         name,
         value,
-        defaultValue,
         placeholder,
         style,
         onChange,
         id: name,
+        defaultValue: initialValues[name],
         'aria-describedby': `${name}-help`,
         'aria-label': name
     };

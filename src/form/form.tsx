@@ -1,12 +1,7 @@
 import React, { useRef, createContext } from 'react';
 // import Input from './InputField';
 
-type contextType = {
-    inputRefs: initialValuesType,
-    errorRefs: initialValuesType
-};
-
-export const FormContext = createContext<contextType>({ inputRefs: {}, errorRefs: {}});
+export const FormContext = createContext<ContextType>({ inputRefs: {}, errorRefs: {}, initialValues: {}});
 
 export type initialValuesType = {
     [key: string]: any
@@ -17,7 +12,7 @@ type FormHandlerHookType = {
     errors: { current: initialValuesType },
     refs: { current: initialValuesType },
     formRef: any,
-    contextValue: contextType,
+    contextValue: ContextType,
     onLiveErrorFeedback?: Function
 }
 
@@ -32,7 +27,7 @@ const getRefKeys = (refs: {[key:string]: HTMLInputElement}): Array<string> => Ob
 //     }, {});
 //     return valuesFromRefs;
 // }
-export const handleFieldError = (contextValue: contextType) => {
+export const handleFieldError = (contextValue: ContextType) => {
     const setFieldError = (fieldName: string, errorMessage: string) => {
         // Check whether the field is on focus
         // If its not on focus then we dont set the errorText otherwise all fields could show errors before they were interacted with
@@ -140,7 +135,8 @@ const Form = ({initialValues, onSubmitHandler, children, onLiveErrorFeedback}: F
     // console.log('INITIAL REFS', refs)
     const contextValue = {
         inputRefs: {},
-        errorRefs: {}
+        errorRefs: {},
+        initialValues
     };
     const formHandler = useForminhoHandler({onSubmitHandler, errors, refs, formRef, contextValue, onLiveErrorFeedback});
 

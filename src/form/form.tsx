@@ -34,7 +34,13 @@ const getRefKeys = (refs: {[key:string]: HTMLInputElement}): Array<string> => Ob
 // }
 export const handleFieldError = (contextValue: contextType) => {
     const setFieldError = (fieldName: string, errorMessage: string) => {
-        contextValue.errorRefs[fieldName].current.innerText = errorMessage;
+        // Check whether the field is on focus
+        // If its not on focus then we dont set the errorText otherwise all fields could show errors before they were interacted with
+        const { current: currentElement } = contextValue.inputRefs[fieldName];
+        const { current: currentErrorSpan } = contextValue.errorRefs[fieldName];
+        console.log('CURRENT FIELD ', currentElement)
+        // console.log('IS ON FOCUS? ', onfocus)
+        if (document.activeElement === currentElement) currentErrorSpan.innerText = errorMessage;
     }
     const clearFieldError = (fieldName: string) => {
         contextValue.errorRefs[fieldName].current.innerText = '';
@@ -45,6 +51,7 @@ export const handleFieldError = (contextValue: contextType) => {
         clearFieldError
     }
 };
+
 
 const useForminhoHandler = ({onSubmitHandler, refs, formRef, contextValue, onLiveErrorFeedback}: FormHandlerHookType) => {
     // const { setFieldError, clearFieldError } = handleFieldError(contextValue);

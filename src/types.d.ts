@@ -85,3 +85,9 @@ type CheckboxProps = {
 
 type FieldProps = InputFieldProps | SelectProps | TextAreaProps | RadioProps | CheckboxProps;
 type ComponentProps = FieldProps | ButtonProps | AlertProps;
+
+type ContextType = {
+    inputRefs: initialValuesType,
+    errorRefs: initialValuesType,
+    initialValues: initialValuesType
+};

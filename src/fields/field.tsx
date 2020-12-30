@@ -1,9 +1,10 @@
-import React, { useRef, useImperativeHandle } from 'react';
+import React, { useRef, useImperativeHandle, useContext } from 'react';
+import { FormContext } from '../form/form';
 
 type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
 
 type FieldProps = {
-    name?: string,
+    name: string,
     type?: string,
     label?: string,
     placeholder?: string,
@@ -15,6 +16,16 @@ type FieldProps = {
     error?: string,
     render?: Function
 };
+
+export type initialValuesType = {
+    [key: string]: any
+}
+
+type contextType = {
+    inputRefs?: initialValuesType,
+    errorRefs?: initialValuesType
+};
+
 
 // interface FieldComponent extends React.ForwardRefExoticComponent<FieldProps & React.RefAttributes<HTMLElement>> {
 //     Input: React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLElement>>;
@@ -33,12 +44,23 @@ const Field = React.forwardRef(({name, type, label, placeholder, style, children
     // console.log('Input ', ref)
     const inputRef = useRef<GenericHTMLInputElement>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
+    const { inputRefs, errorRefs }: contextType = useContext(FormContext) as { errorRefs: initialValuesType, inputRefs: initialValuesType };
+    console.log('CONTEXT NO INPUT ---- ', inputRefs, errorRefs)
     // const errorRef = React.useCallback(node => {
     //     if(node !== null) {
     //         console.log(node);
     //     }
     //     return node;
     // }, []);
+
+    // const { name: propName } = props;
+    // const refFunction = (input) => formContext.refs[name] = inputRef;
+    const appendRefs = () => {
+        inputRefs[name] = inputRef;
+        errorRefs[name] = errorRef;
+        console.log('Refs Appended ', inputRefs, errorRefs);
+    };
+    appendRefs();
 
     useImperativeHandle(
         ref,

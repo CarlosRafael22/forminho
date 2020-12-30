@@ -2,11 +2,11 @@ import React, { useRef, createContext } from 'react';
 // import Input from './InputField';
 
 type contextType = {
-    inputRefs?: initialValuesType,
-    errorRefs?: initialValuesType
+    inputRefs: initialValuesType,
+    errorRefs: initialValuesType
 };
 
-export const FormContext = createContext<contextType>({});
+export const FormContext = createContext<contextType>({ inputRefs: {}, errorRefs: {}});
 
 export type initialValuesType = {
     [key: string]: any
@@ -17,7 +17,8 @@ type FormHandlerHookType = {
     errors: { current: initialValuesType },
     refs: { current: initialValuesType },
     formRef: any,
-    contextValue: contextType
+    contextValue: contextType,
+    onLiveErrorFeedback?: Function
 }
 
 const getRefKeys = (refs: {[key:string]: HTMLInputElement}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
@@ -31,8 +32,22 @@ const getRefKeys = (refs: {[key:string]: HTMLInputElement}): Array<string> => Ob
 //     }, {});
 //     return valuesFromRefs;
 // }
+export const handleFieldError = (contextValue: contextType) => {
+    const setFieldError = (fieldName: string, errorMessage: string) => {
+        contextValue.errorRefs[fieldName].current.innerText = errorMessage;
+    }
+    const clearFieldError = (fieldName: string) => {
+        contextValue.errorRefs[fieldName].current.innerText = '';
+    }
 
-const useForminhoHandler = ({onSubmitHandler, refs, formRef, contextValue}: FormHandlerHookType) => {
+    return {
+        setFieldError,
+        clearFieldError
+    }
+};
+
+const useForminhoHandler = ({onSubmitHandler, refs, formRef, contextValue, onLiveErrorFeedback}: FormHandlerHookType) => {
+    // const { setFieldError, clearFieldError } = handleFieldError(contextValue);
 
     const onChangeHandler = (event: any) => {
         console.log('CHANGE')
@@ -43,19 +58,11 @@ const useForminhoHandler = ({onSubmitHandler, refs, formRef, contextValue}: Form
         console.log('CONTEXT VALUES')
         console.log(contextValue)
 
-        if(event.target.name == 'firstName') {
-            console.log(event.target.value.length)
-            const { errorRefs } = contextValue as { errorRefs: initialValuesType};
-            if (event.target.value.length < 6) {
-                console.log('Error: ', errorRefs['firstName'])
-                console.log('Error: ', errorRefs['firstName'].current)
-                errorRefs['firstName'].current.innerText = 'Cant be less than 6 caracters';
-                // refs.current['firstName'].value = 'Cant be less than 6 caracters';
-                console.log('ERROS: ', contextValue.errorRefs)
-            } else {
-                errorRefs['firstName'].current.innerText = '';
-            }
-        }
+        console.log('FORM VALUES')
+        const formRefValues = getValuesFromFormRef(formRef);
+        console.log(formRefValues)
+
+        if(onLiveErrorFeedback) onLiveErrorFeedback(formRefValues, contextValue);
     };
 
     const getValuesFromFormRef = (formRef: any) => {
@@ -111,7 +118,7 @@ interface FormProps extends FormHandlerHookType {
     children: Array<React.ReactElement>
 }
 
-const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
+const Form = ({initialValues, onSubmitHandler, children, onLiveErrorFeedback}: FormProps) => {
     const refs = useRef(initialValues);
     const formRef = useRef<HTMLFormElement>(null);
     // console.log('initialValues ', initialValues)
@@ -128,32 +135,7 @@ const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
         inputRefs: {},
         errorRefs: {}
     };
-    const formHandler = useForminhoHandler({onSubmitHandler, errors, refs, formRef, contextValue});
-
-    // const childrenWithFormProps = React.Children.map(children, child => {
-    //     if (React.isValidElement(child)) {
-    //         console.log('CHILD')
-    //         console.log(child.props)
-    //         const { props } = child as any;
-    //         const { name: propName } = props;
-    //         const refFunction = (input) => refs[propName] = input;
-    //         const refCallback = (el) => {
-    //             console.log('RefCallback ', el);
-    //             refs.current[propName] = el.input;
-    //             errors.current[propName] = el.error;
-    //         };
-    //         const prop = {
-    //             ref: refCallback,
-    //             onChange: formHandler.onChangeHandler,
-    //             defaultValue: initialValues[propName],
-    //             error: errors.current[propName],
-    //         } as Partial<unknown>;
-    //         console.log('PROPS --> ', prop)
-    //         const newChild = React.cloneElement(child, prop);
-    //         console.log(newChild.props)
-    //         return newChild;
-    //     };
-    // })
+    const formHandler = useForminhoHandler({onSubmitHandler, errors, refs, formRef, contextValue, onLiveErrorFeedback});
 
     console.log('Rendering')
     console.log(errors)

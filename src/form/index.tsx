@@ -10,11 +10,6 @@ const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}:
     const [error, setError] = useState(undefined);
 
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // console.log('CHANGE')
-        // console.log(event.target)
-        // console.log(event.target.value)
-        // console.log(event.target.name)
-        // Special case for Checkbox
         const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
         setValues({
             ...values,
@@ -35,11 +30,6 @@ const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}:
 
     const submitHandler = (event: React.FormEvent) => {
         event.preventDefault();
-        // console.log('SUBMIT')
-        // console.log(event)
-        // console.log(event.target)
-        // console.log(event.target.elements)
-        // console.log(event.target.elements.email)
         if (validatedValues()) {
             onSubmitHandler(values);
         }        

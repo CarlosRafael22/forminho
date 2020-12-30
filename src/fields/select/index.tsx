@@ -10,6 +10,10 @@ const StyledLabel = styled.label`
     padding: 10px;
 `;
 
+// TO DO: Receive label custom style 
+// Remove the need of providing the options, we could pass an array with the names of value and label
+// Remove type field
+
 const Select = ({name, value, onChange, children, label, style}: SelectProps) => (
     <div style={{...defaultStyle, ...style}}>
         {label && <StyledLabel htmlFor={`${name}-input`}>{label}</StyledLabel>}

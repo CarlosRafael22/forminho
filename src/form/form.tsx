@@ -1,5 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef, createContext } from 'react';
 // import Input from './InputField';
+
+type contextType = {
+    inputRefs?: initialValuesType,
+    errorRefs?: initialValuesType
+};
+
+export const FormContext = createContext<contextType>({});
 
 export type initialValuesType = {
     [key: string]: any
@@ -9,7 +16,8 @@ type FormHandlerHookType = {
     onSubmitHandler: Function,
     errors: { current: initialValuesType },
     refs: { current: initialValuesType },
-    formRef: any
+    formRef: any,
+    contextValue: contextType
 }
 
 const getRefKeys = (refs: {[key:string]: HTMLInputElement}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
@@ -24,7 +32,7 @@ const getRefKeys = (refs: {[key:string]: HTMLInputElement}): Array<string> => Ob
 //     return valuesFromRefs;
 // }
 
-const useForminhoHandler = ({onSubmitHandler, refs, formRef}: FormHandlerHookType) => {
+const useForminhoHandler = ({onSubmitHandler, refs, formRef, contextValue}: FormHandlerHookType) => {
 
     const onChangeHandler = (event: any) => {
         console.log('CHANGE')
@@ -32,27 +40,22 @@ const useForminhoHandler = ({onSubmitHandler, refs, formRef}: FormHandlerHookTyp
         console.log(event.target.value)
         console.log(event.target.name)
 
-        // if(event.target.name == 'firstName') {
-        //     console.log(event.target.value.length)
-        //     if (event.target.value.length < 6) {
-        //         errors.current['firstName'].innerText = 'Cant be less than 6 caracters';
-        //         // refs.current['firstName'].value = 'Cant be less than 6 caracters';
-        //         console.log(errors)
-        //     } else {
-        //         errors.current['firstName'].innerText = '';
-        //     }
-        // }
+        console.log('CONTEXT VALUES')
+        console.log(contextValue)
 
-        // if(event.target.name == 'password') {
-        //     console.log(event.target.value.length)
-        //     if (event.target.value.length < 6) {
-        //         errors.current['password'].innerText = 'Cant be less than 6 caracters';
-        //         // refs.current['firstName'].value = 'Cant be less than 6 caracters';
-        //         console.log(errors)
-        //     } else {
-        //         errors.current['password'].innerText = '';
-        //     }
-        // }
+        if(event.target.name == 'firstName') {
+            console.log(event.target.value.length)
+            const { errorRefs } = contextValue as { errorRefs: initialValuesType};
+            if (event.target.value.length < 6) {
+                console.log('Error: ', errorRefs['firstName'])
+                console.log('Error: ', errorRefs['firstName'].current)
+                errorRefs['firstName'].current.innerText = 'Cant be less than 6 caracters';
+                // refs.current['firstName'].value = 'Cant be less than 6 caracters';
+                console.log('ERROS: ', contextValue.errorRefs)
+            } else {
+                errorRefs['firstName'].current.innerText = '';
+            }
+        }
     };
 
     const getValuesFromFormRef = (formRef: any) => {
@@ -93,27 +96,6 @@ const useForminhoHandler = ({onSubmitHandler, refs, formRef}: FormHandlerHookTyp
     const submitHandler = (event: any) => {
         event.preventDefault();
         console.log('SUBMIT')
-        // console.log(event)
-        // console.log(event.target)
-        // console.log(refs)
-        // console.log(refs.current)
-        // const values = getValuesFromRefs(refs.current);
-        // console.log(values)
-        // console.log('FORM REF ', formRef)
-        // console.log(formRef.current)
-        // console.log(formRef.current.firstName)
-        // console.log(formRef.current.firstName.value)
-        // console.log(formRef.current.humanType)
-        // console.log(formRef.current.humanType.value)
-        // console.log(formRef.current.languages)
-        // console.log(formRef.current.languages.value)
-        // const {languages} = formRef.current;
-        // const langArray = Array.from(languages);
-        // console.log(langArray);
-        // const checked = langArray.filter((input: any) => input.checked);
-        // const checkedValues = checked.map((input: any) => input.value);
-        // console.log(checked, checkedValues)
-        // console.log('--------------')
         const formRefValues = getValuesFromFormRef(formRef);
         onSubmitHandler(formRefValues);
     }
@@ -142,7 +124,11 @@ const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
     const errors = useRef(initialErrors);
     // console.log(initialValues)
     // console.log('INITIAL REFS', refs)
-    const formHandler = useForminhoHandler({onSubmitHandler, errors, refs, formRef});
+    const contextValue = {
+        inputRefs: {},
+        errorRefs: {}
+    };
+    const formHandler = useForminhoHandler({onSubmitHandler, errors, refs, formRef, contextValue});
 
     // const childrenWithFormProps = React.Children.map(children, child => {
     //     if (React.isValidElement(child)) {
@@ -173,19 +159,13 @@ const Form = ({initialValues, onSubmitHandler, children}: FormProps) => {
     console.log(errors)
     console.log(refs)
     console.log(formRef)
-    // console.log(formRef.current)
-    // console.log(formRef.firstName)
-    // const { current } = formRef as any;
-    // console.log(current.firstName)
-    // const { humanType } = formRef as any;
-    // console.log('HUMAN TYPE -> ', humanType)
+
     return (
-        <form ref={formRef} className="main-form" onSubmit={formHandler.submitHandler} onChange={formHandler.onChangeHandler}>
+        <FormContext.Provider value={contextValue}>
+            <form ref={formRef} className="main-form" onSubmit={formHandler.submitHandler} onChange={formHandler.onChangeHandler}>
             {children}
-            {/* <Input onChange={formHandler.onChangeHandler} name='firstName' type='text' label='Your first name' placeholder='Type your first name...' />
-            <Input onChange={formHandler.onChangeHandler} name='lastName' type='text' label='Your last name' placeholder='Type your last name...' />
-            <button type="submit" className="btn btn-primary">Submit</button> */}
         </form>
+        </FormContext.Provider>
     )
 };
 

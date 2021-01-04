@@ -1,5 +1,5 @@
 import React, { useRef, useImperativeHandle, useContext } from 'react';
-import { FormContext } from '../form/form';
+import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 
 type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
 
@@ -23,19 +23,15 @@ type FieldProps = {
 //     TextArea: React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLElement>>;
 // };
 
-type GenericHTMLInputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-// type GenericFieldHTMLAttributes =
-//   | JSX.IntrinsicElements['input']
-//   | JSX.IntrinsicElements['select']
-//   | JSX.IntrinsicElements['textarea'];
+// type GenericHTMLInputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 const Field = React.forwardRef(({name, type, label, placeholder, style, children, onChange, value}: FieldProps, ref) => {
     // const element = 
     // console.log('Input ', ref)
-    const inputRef = useRef<GenericHTMLInputElement>(null);
+    const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
-    const { inputRefs, errorRefs, initialValues }: ContextType = useContext(FormContext);
-    console.log('CONTEXT NO INPUT ---- ', inputRefs, errorRefs)
+    const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
+    console.log('CONTEXT NO INPUT ---- ', fieldRefs, errorRefs)
     // const errorRef = React.useCallback(node => {
     //     if(node !== null) {
     //         console.log(node);
@@ -46,9 +42,9 @@ const Field = React.forwardRef(({name, type, label, placeholder, style, children
     // const { name: propName } = props;
     // const refFunction = (input) => formContext.refs[name] = inputRef;
     const appendRefs = () => {
-        inputRefs[name] = inputRef;
+        fieldRefs[name] = inputRef;
         errorRefs[name] = errorRef;
-        console.log('Refs Appended ', inputRefs, errorRefs);
+        console.log('Refs Appended ', fieldRefs, errorRefs);
     };
     appendRefs();
 

@@ -91,7 +91,7 @@ const Form = (props:any) => {
     const context = useContext(FormContext) as FormContextType;
     // console.log("Context in the Form: ", context);
     context.formRef = formRef;
-    context.initialValues = props.initialValues;
+    context.initialValues = props.initialValues || {};
     console.log("Context in the Form: ", context);
   
     const updateLiveValue = (fieldName: string) => {
@@ -149,9 +149,9 @@ const Form = (props:any) => {
         context.currentValues = formRefValues;
         console.log(context)
 
-        props.onLiveErrorFeedback(formRefValues, context);
+        if(props.onLiveErrorFeedback) props.onLiveErrorFeedback(formRefValues, context);
         console.log('CALLING ONCHANGE FROM THE SIGNUP')
-        props.onChangeHandler(event);
+        if(props.onChangeHandler) props.onChangeHandler(event);
     };
 
 

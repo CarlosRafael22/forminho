@@ -1,4 +1,4 @@
-import React, { useRef, useImperativeHandle, useContext } from 'react';
+import React, { useRef, useContext } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 
 type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
@@ -25,7 +25,7 @@ type FieldProps = {
 
 // type GenericHTMLInputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
-const Field = React.forwardRef(({name, type, label, placeholder, style, children, onChange, value}: FieldProps, ref) => {
+const Field = ({name, type, label, placeholder, style, children, onChange, value}: FieldProps) => {
     // const element = 
     // console.log('Input ', ref)
     const inputRef = useRef<GenericHTMLInput>(null);
@@ -47,17 +47,6 @@ const Field = React.forwardRef(({name, type, label, placeholder, style, children
         console.log('Refs Appended ', fieldRefs, errorRefs);
     };
     appendRefs();
-
-    useImperativeHandle(
-        ref,
-        () => ({
-            input: inputRef.current,
-            error: errorRef.current
-        }),
-        [inputRef, errorRef]
-    );
-    // console.log('REF inside ', ref)
-
 
     const DOMProps = {
         name,
@@ -91,76 +80,20 @@ const Field = React.forwardRef(({name, type, label, placeholder, style, children
     return (
         <div>
             {label && <label htmlFor={`${name}-input`}>{label}</label>}
-            {/* <input
-                ref={inputRef}
-                {...DOMProps}
-            /> */}
             {element()}
-            {/* {render(inputRef, DOMProps)} */}
-            {/* {children} */}
             <span ref={errorRef} style={{color: "red"}} />
         </div>
     );
-});
-
-// const Select = React.forwardRef(({children, ...rest}, ref) => {
-//     const renderSelect = ({inputRef, DOMProps}): JSX.Element => (
-//         <select ref={inputRef} {...DOMProps}>
-//             {children}
-//         </select>
-//     );
-//     const props = {...rest};
-//     return (
-//         <Field ref={ref} render={renderSelect} {...props} />
-//     );
-// });
-
-// const Input = React.forwardRef((props, ref) => {
-//     const renderInput = ({inputRef, DOMProps}) => (
-//         <input ref={inputRef} {...DOMProps} />
-//     );
-
-//     return (
-//         <Field ref={ref} render={renderInput} {...props} />
-//     );
-// });
-
-// const TextArea = (props) => {
-//     const renderTextArea = ({inputRef, DOMProps}) => (
-//         <textarea ref={inputRef} {...DOMProps} />
-//     );
-
-//     return (
-//         <Field render={renderTextArea} {...props} />
-//     );
-// };
-
-// Field.Input = Input;
-// Field.Select = Select;
-// Field.TextArea = TextArea;
-
-// const SelectField = (props) => (
-//     <Field render={Select} {...props} />
-// );
-
-// const Input = ({inputRef, DOMProps}) => {
-//     return (
-//         <input ref={inputRef} {...DOMProps} />
-//     );
-// };
-
-// const TextArea = ({inputRef, DOMProps}) => {
-//     return (
-//         <textarea ref={inputRef} {...DOMProps} />
-//     );
-// };
-
-{/* <Input render={Select} ></Input>
-
-const CoreField = (htmlElement, children) => (
-    < ref={inputRef} {...DOMProps} />
-    {children}
-); */}
+};
 
 
-export default Field;
+const ExportField = {
+    Input: (props: FieldProps) => Field(props),
+    Select: (props: FieldProps) => Field({...props, type: 'select'}),
+    TextArea: (props: FieldProps) => Field({...props, type: 'textarea'}),
+    Radio: (props: FieldProps) => Field({...props, type: 'radio'}),
+    Checkbox: (props: FieldProps) => Field({...props, type: 'checkbox'})
+};
+
+
+export default ExportField;

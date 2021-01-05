@@ -1,13 +1,13 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import TextArea from '../../fields/textarea';
+import Field from '../../fields';
 
 export default {
     title: 'Simple-Form/TextArea',
-    component: TextArea
+    component: Field.TextArea
 } as Meta;
 
-const Template = (args) => <TextArea {...args} />;
+const Template = (args) => <Field.TextArea {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

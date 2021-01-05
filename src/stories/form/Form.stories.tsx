@@ -112,6 +112,13 @@ WithButtonAsChild.args = {
     items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args, CustomButton.args]
 };
 
+export const WithTwoButtonAsChildren = Template.bind({});
+WithTwoButtonAsChildren.args = {
+    ...defaultArgs,
+    items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args, CustomButton.args,
+    {...CustomButton.args, text: 'Second send'}]
+};
+
 export const WithSelect = Template.bind({});
 WithSelect.args = {
     ...defaultArgs,

@@ -6,22 +6,50 @@ type cssObject = {
     [key: string]: string
 }
 
-type FormHandlerHookType = {
-    initialValues: initialValuesType,
-    onSubmitHandler: Function,
-    onValidationHandler?: (values: initialValuesType) => void
+type ObjectType = {
+    [key: string]: any
 }
 
-type FormHandlerHookReturn = {
-    values: initialValuesType,
-    onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void,
-    submitHandler: (event: React.FormEvent) => void,
-    error?: string
-}
+// type FormHandlerHookType = {
+//     initialValues: initialValuesType,
+//     onSubmitHandler: Function,
+//     onValidationHandler?: (values: initialValuesType) => void
+// }
 
-interface FormProps extends FormHandlerHookType {
-    children: Array<React.ReactElement>,
+// type FormHandlerHookReturn = {
+//     values: initialValuesType,
+//     onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void,
+//     submitHandler: (event: React.FormEvent) => void,
+//     error?: string
+// }
+
+interface FormProps {
+    onSubmitHandler: (currentValues: ObjectType) => void,
+    initialValues: ObjectType,
+    children?: Array<React.ReactElement>,
+    onChangeHandler?: (event: React.ChangeEvent<HTMLFormElement>) => void,
+    onLiveErrorFeedback?: (currentValues: ObjectType, context: FormContextType) => void,
     submitButtonText?: string
+}
+
+type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
+
+type FieldProps = {
+    name: string,
+    type?: string,
+    label?: string,
+    placeholder?: string,
+    style?: any,
+    children?: Array<React.ReactElement>,
+    onChange?: (event: GenericInputChangeEvent) => void,
+    value?: string,
+    defaultValue?: string,
+    error?: string,
+    render?: Function
+};
+
+type LiveValueProps = {
+    fieldName: string
 }
 
 type InputFieldProps = {
@@ -83,11 +111,20 @@ type CheckboxProps = {
     style?: cssObject
 };
 
-type FieldProps = InputFieldProps | SelectProps | TextAreaProps | RadioProps | CheckboxProps;
+// type FieldProps = InputFieldProps | SelectProps | TextAreaProps | RadioProps | CheckboxProps;
 type ComponentProps = FieldProps | ButtonProps | AlertProps;
 
-type ContextType = {
-    inputRefs: initialValuesType,
-    errorRefs: initialValuesType,
-    initialValues: initialValuesType
-};
+type GenericHTMLInput = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+type RefsObject<T> = {
+    [key: string]: React.MutableRefObject<T>
+}
+
+type FormContextType = {
+    formRef: React.MutableRefObject<HTMLFormElement | null>,
+    liveValuesRefs: { [key: string]: Array<HTMLSpanElement>},
+    fieldRefs: RefsObject<GenericHTMLInput | null>,
+    errorRefs: RefsObject<HTMLSpanElement | null>,
+    initialValues: ObjectType,
+    currentValues: ObjectType
+}

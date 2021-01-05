@@ -29,6 +29,7 @@ interface FormProps {
     children?: Array<React.ReactElement>,
     onChangeHandler?: (event: React.ChangeEvent<HTMLFormElement>) => void,
     onLiveErrorFeedback?: (currentValues: ObjectType, context: FormContextType) => void,
+    onValidationHandler?: (values: ObjectType) => void,
     submitButtonText?: string
 }
 

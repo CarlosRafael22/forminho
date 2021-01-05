@@ -7,7 +7,7 @@ export default {
     component: Field.Input,
 } as Meta;
 
-const Template: Story<InputFieldProps> = (args) => <Field.Input {...args} />;
+const Template: Story<FieldProps> = (args) => <Field.Input {...args} />;
 
 const defaultArgs = {
     type: 'text',

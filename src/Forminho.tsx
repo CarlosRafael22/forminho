@@ -12,7 +12,7 @@ type RefsObject<T> = {
 
 export type FormContextType = {
     formRef: React.MutableRefObject<HTMLFormElement | null>,
-    liveValuesRefs: RefsObject<HTMLSpanElement | null>,
+    liveValuesRefs: { [key: string]: Array<HTMLSpanElement>},
     fieldRefs: RefsObject<GenericHTMLInput | null>,
     errorRefs: RefsObject<HTMLSpanElement | null>,
     initialValues: ObjectType,

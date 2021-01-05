@@ -36,7 +36,9 @@ export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormEle
     const values = initialValuesKeys.reduce((valuesObj, key) => {
         // console.log('KEY FORM REF', key, formRef.current[key]?.type, formRef.current[key])
         const { current } = formRef as React.MutableRefObject<HTMLFormElement>;
+        // console.log(current)
         const currentRef = current[key];
+        // console.log(currentRef)
         if (currentRef) {
             // If its a radio or checkbox then it cant be accessed with .value just yet
             if (NodeList.prototype.isPrototypeOf(currentRef)) {
@@ -54,7 +56,7 @@ export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormEle
                 }
             } else if (currentRef.type === 'checkbox') {
                 // If its not a node list of radios or checkboxes it can be an isolated checkbox
-                // console.log('CAIU CHECKBOX ISOLADO ', currentRef.checked, currentRef.value)
+                console.log('CAIU CHECKBOX ISOLADO ', currentRef.checked, currentRef.value)
                 valuesObj[key] = currentRef.checked;
             } else {
                 valuesObj[key] = currentRef.value;
@@ -67,7 +69,7 @@ export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormEle
 };
 
 export const updateLiveValue = (context: FormContextType, fieldName: string) => {
-    if (context.liveValuesRefs[fieldName]) {
+    if (context.liveValuesRefs && context.liveValuesRefs[fieldName]) {
         context.liveValuesRefs[fieldName].forEach(liveValueSpan => {
             // const liveValueSpan = context.liveValuesRefs[fieldName].current as HTMLSpanElement;
             const fieldRefCurrent = context.fieldRefs[fieldName].current as GenericHTMLInput;

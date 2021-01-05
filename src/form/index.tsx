@@ -1,11 +1,15 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef, useContext, useState } from "react";
 import { FormContext, FormContextType } from '../Forminho';
 import { getValuesFromFormRef, updateLiveValue } from './utils';
 import Button from '../button';
+import Alert from '../alert';
 
-const Form = ({ initialValues, onSubmitHandler, onChangeHandler, onLiveErrorFeedback, children, submitButtonText }: FormProps) => {
+const Form = ({
+    initialValues, onSubmitHandler, onChangeHandler, onLiveErrorFeedback, onValidationHandler, children, submitButtonText
+}: FormProps) => {
     const formRef = useRef(null);
     const context = useContext(FormContext) as FormContextType;
+    const [error, setError] = useState(undefined);
     // console.log("Context in the Form: ", context);
     context.formRef = formRef;
     context.initialValues = initialValues || {};
@@ -31,11 +35,27 @@ const Form = ({ initialValues, onSubmitHandler, onChangeHandler, onLiveErrorFeed
         if(onChangeHandler) onChangeHandler(event);
     };
 
+    const validatedValues = (values: ObjectType) => {
+        try {
+            if (onValidationHandler) onValidationHandler(values);
+            setError(undefined);
+            return true;
+        } catch (error) {
+            setError(error.message);
+            return false;
+        }
+    }
+
     const onSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         console.log('SUBMIT')
-        const formRefValues = getValuesFromFormRef(formRef, context.initialValues);
-        onSubmitHandler(formRefValues);
+        console.log('antes de mandar: ', formRef, context)
+        const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
+        // onSubmitHandler(formRefValues);
+        console.log('formRefValues: ', formRefValues)
+        if (validatedValues(formRefValues)) {
+            onSubmitHandler(formRefValues);
+        }
     }
 
     // Checks whether we need to render the buttons coming as children or the default one
@@ -55,6 +75,7 @@ const Form = ({ initialValues, onSubmitHandler, onChangeHandler, onLiveErrorFeed
     console.log('Rendering form...')
     return (
       <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
+        {error && <Alert text={error as unknown as string} />}
         {children}
         {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}
       </form>

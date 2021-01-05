@@ -1,8 +1,8 @@
 // import Form, { handleFieldError } from './form/form';
-import Form, { handleFieldError } from './form/CoolForm';
+import Form, { handleFieldError } from './form';
 import Forminho from './Forminho';
 import LiveValue from './fields/LiveValue';
-import Field from './fields/field';
+import Field from './fields';
 import Button from './button';
 
 export {

@@ -1,17 +1,8 @@
 import React, { useRef, useContext } from "react";
 import { FormContext, FormContextType, GenericHTMLInput, ObjectType } from '../Forminho';
+import Button from '../button';
 
 export const getRefKeys = (refs: {[key:string]: any}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
-// const getValuesFromRefs = (refs: {[key:string]: HTMLInputElement}) => {
-//     // Oddly, the current value of the ref has a undefined: undefined key, value par
-//     const valuesFromRefs = getRefKeys(refs).reduce((valuesObj, key) => {
-//         console.log('KEY ', key, valuesObj)
-//         if (key !== undefined) valuesObj[key] = refs[key].value;
-//         return valuesObj;
-//     }, {});
-//     return valuesFromRefs;
-// }
-
 
 export const handleFieldError = (contextValue: FormContextType) => {
     const setFieldError = (fieldName: string, errorMessage: string) => {
@@ -78,7 +69,6 @@ export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormEle
 };
 
 
-
 const Form = (props:any) => {
     const formRef = useRef(null);
     const context = useContext(FormContext) as FormContextType;
@@ -97,37 +87,6 @@ const Form = (props:any) => {
             });
         }
     };
-  
-    // const onChange = (event) => {
-    //   const name = event.target.name;
-    // //   console.log("FORM ONCHANGE ---> ", name);
-    // //   console.log("CONTEXT IN FORM: ", context, context.formRef.current);
-    //   updateLiveValue(name);
-    // //   console.log(
-    // //     "Updated context values: ",
-    // //     context.liveValues[name].current.innerText,
-    // //     context.fieldRefs[name].current.value
-    // //   );
-  
-    // //   console.log("CALLING PROPS ONCHANGE");
-    //   props.onChange(event);
-    // };
-  
-    // useEffect(() => {
-    //   console.log("Form Effect -> ", formRef);
-    // });
-
-    // const formRef = useRef(null);
-    // console.log('initialValues ', initialValues)
-    // console.log(Object.keys(initialValues))
-    // const initialErrors = Object.keys(initialValues).reduce((errorsObj, key) => {
-    //     // console.log('KEY ', key, errorsObj)
-    //     errorsObj[key] = null;
-    //     return errorsObj;
-    // }, {});
-    // const errors = useRef(initialErrors);
-
-    // const formHandler = useForminhoHandler({onSubmitHandler, errors, refs, formRef, contextValue, onLiveErrorFeedback, setCurrentValues});
 
     const onChange = (event: any) => {
         console.log('CHANGE')
@@ -149,7 +108,6 @@ const Form = (props:any) => {
         if(props.onChangeHandler) props.onChangeHandler(event);
     };
 
-
     const onSubmit = (event: any) => {
         event.preventDefault();
         console.log('SUBMIT')
@@ -157,13 +115,27 @@ const Form = (props:any) => {
         props.onSubmitHandler(formRefValues);
     }
 
+    let ButtonToRender: React.ReactElement<any>;
+    let willRenderDefaultButton = true;
 
+    React.Children.map(props.children, (child: React.ReactElement<any>) => {
+        if (React.isValidElement(child)) {
+            console.log('CHILD')
+            // const { type } = child;
+            console.log(child.type)
+            if (child.type === Button) {
+                ButtonToRender = child;
+                willRenderDefaultButton = false;
+            }
+        }
+    });
   
     console.log("REF DO FORM: ", formRef);
+    console.log('Rendering form...')
     return (
       <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
         {props.children}
-        {/* <button>Send</button> */}
+        {willRenderDefaultButton && (props.submitButtonText ? <Button text={props.submitButtonText} /> : <Button />)}
       </form>
     );
   };

@@ -1,5 +1,5 @@
-// import Form, { handleFieldError } from './form/form';
-import Form, { handleFieldError } from './form';
+import Form from './form';
+import { handleFieldError } from './form/utils';
 import Forminho from './Forminho';
 import LiveValue from './fields/LiveValue';
 import Field from './fields';

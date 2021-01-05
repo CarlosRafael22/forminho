@@ -1,50 +1,6 @@
 import React, { useRef, useContext } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 
-const getStyleForLabel = (type: string | undefined) => {
-    const inlineDisplay = ['radio', 'checkbox', 'select'];
-
-    return {
-        fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
-        display: inlineDisplay.indexOf(type || '') >= 0 ? 'inline-block' : 'block',
-        margin: '0 0 .28571429rem 0',
-        color: 'rgba(0,0,0,.87)',
-        fontSize: '.8em',
-        fontWeight: 700,
-        marginRight: inlineDisplay.indexOf(type || '') >= 0 ? '0.25em' : '0'
-    };
-};
-
-const defaultInputStyle = {
-    fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
-    margin: 0,
-    outline: 0,
-    lineHeight: '1.21428571em',
-    padding: '.67857143em 1em',
-    fontSize: '0.8em',
-    background: '#fff',
-    border: '1px solid rgba(34,36,38,.15)',
-    color: 'rgba(0,0,0,.87)',
-    borderRadius: '.28571429rem',
-    // width: '100%'
-}
-
-type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
-
-type FieldProps = {
-    name: string,
-    type?: string,
-    label?: string,
-    placeholder?: string,
-    style?: any,
-    children?: Array<React.ReactElement>,
-    onChange?: (event: GenericInputChangeEvent) => void,
-    value?: string,
-    defaultValue?: string,
-    error?: string,
-    render?: Function
-};
-
 const Field = ({name, type, label, placeholder, style, children, onChange, value}: FieldProps) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
@@ -107,6 +63,35 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
         </div>
     );
 };
+
+
+const getStyleForLabel = (type: string | undefined) => {
+    const inlineDisplay = ['radio', 'checkbox', 'select'];
+
+    return {
+        fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+        display: inlineDisplay.indexOf(type || '') >= 0 ? 'inline-block' : 'block',
+        margin: '0 0 .28571429rem 0',
+        color: 'rgba(0,0,0,.87)',
+        fontSize: '.8em',
+        fontWeight: 700,
+        marginRight: inlineDisplay.indexOf(type || '') >= 0 ? '0.25em' : '0'
+    };
+};
+
+const defaultInputStyle = {
+    fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+    margin: 0,
+    outline: 0,
+    lineHeight: '1.21428571em',
+    padding: '.67857143em 1em',
+    fontSize: '0.8em',
+    background: '#fff',
+    border: '1px solid rgba(34,36,38,.15)',
+    color: 'rgba(0,0,0,.87)',
+    borderRadius: '.28571429rem',
+    // width: '100%'
+}
 
 
 const ExportField = {

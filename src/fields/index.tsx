@@ -1,10 +1,33 @@
 import React, { useRef, useContext } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 
-const defaultStyle = {
-    display: 'inline-block',
-    margin: '5px'
+const getStyleForLabel = (type: string | undefined) => {
+    const inlineDisplay = ['radio', 'checkbox', 'select'];
+
+    return {
+        fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+        display: inlineDisplay.indexOf(type || '') >= 0 ? 'inline-block' : 'block',
+        margin: '0 0 .28571429rem 0',
+        color: 'rgba(0,0,0,.87)',
+        fontSize: '.8em',
+        fontWeight: 700,
+        marginRight: inlineDisplay.indexOf(type || '') >= 0 ? '0.25em' : '0'
+    };
 };
+
+const defaultInputStyle = {
+    fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+    margin: 0,
+    outline: 0,
+    lineHeight: '1.21428571em',
+    padding: '.67857143em 1em',
+    fontSize: '0.8em',
+    background: '#fff',
+    border: '1px solid rgba(34,36,38,.15)',
+    color: 'rgba(0,0,0,.87)',
+    borderRadius: '.28571429rem',
+    // width: '100%'
+}
 
 type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
 
@@ -22,18 +45,7 @@ type FieldProps = {
     render?: Function
 };
 
-// interface FieldComponent extends React.ForwardRefExoticComponent<FieldProps & React.RefAttributes<HTMLElement>> {
-//     Input: React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLElement>>;
-//     Select: React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLElement>>;
-//     TextArea: React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLElement>>;
-// };
-
-// type GenericHTMLInputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-
-
 const Field = ({name, type, label, placeholder, style, children, onChange, value}: FieldProps) => {
-    // const element = 
-    // console.log('Input ', ref)
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
@@ -62,7 +74,7 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
         name,
         value,
         placeholder,
-        style: {...defaultStyle, ...style},
+        style: {...defaultInputStyle, ...style},
         onChange,
         id: name,
         defaultValue: initialValues ? initialValues[name]: undefined,
@@ -89,7 +101,7 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
     
     return (
         <div>
-            {label && <label htmlFor={`${name}-input`}>{label}</label>}
+            {label && <label htmlFor={`${name}-input`} style={getStyleForLabel(type)}>{label}</label>}
             {element()}
             <span ref={errorRef} style={{color: "red"}} />
         </div>

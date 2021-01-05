@@ -1,14 +1,7 @@
-import React, {
-    useRef,
-    useContext
-  } from "react";
-
+import React, { useRef, useContext } from "react";
 import { FormContext, FormContextType, GenericHTMLInput, ObjectType } from '../Forminho';
 
-
-
-const getRefKeys = (refs: {[key:string]: HTMLInputElement}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
-
+export const getRefKeys = (refs: {[key:string]: any}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
 // const getValuesFromRefs = (refs: {[key:string]: HTMLInputElement}) => {
 //     // Oddly, the current value of the ref has a undefined: undefined key, value par
 //     const valuesFromRefs = getRefKeys(refs).reduce((valuesObj, key) => {
@@ -48,7 +41,7 @@ export const handleFieldError = (contextValue: FormContextType) => {
     }
 };
 
-const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormElement | null>, initialValues: ObjectType) => {
+export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormElement | null>, initialValues: ObjectType) => {
     const initialValuesKeys = getRefKeys(initialValues);
     // console.log('KEYS ', initialValuesKeys)
     const values = initialValuesKeys.reduce((valuesObj, key) => {
@@ -95,13 +88,13 @@ const Form = (props:any) => {
     console.log("Context in the Form: ", context);
   
     const updateLiveValue = (fieldName: string) => {
-        console.log('Updating liveValues: ', context.liveValuesRefs[fieldName])
         if (context.liveValuesRefs[fieldName]) {
-            console.log('TEM NO LIVE VALUE')
-            const liveValueSpan = context.liveValuesRefs[fieldName].current as HTMLSpanElement;
-            const fieldRefCurrent = context.fieldRefs[fieldName].current as GenericHTMLInput;
-            liveValueSpan.innerText = fieldRefCurrent.value;
-            console.log(liveValueSpan.innerText)
+            context.liveValuesRefs[fieldName].forEach(liveValueSpan => {
+                // const liveValueSpan = context.liveValuesRefs[fieldName].current as HTMLSpanElement;
+                const fieldRefCurrent = context.fieldRefs[fieldName].current as GenericHTMLInput;
+                liveValueSpan.innerText = fieldRefCurrent.value;
+                console.log(liveValueSpan.innerText)
+            });
         }
     };
   

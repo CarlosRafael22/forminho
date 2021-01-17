@@ -14,4 +14,5 @@ export const ButtonDiv = styled.button.attrs({
     background-color: #1ea7fd;
     font-size: 12px;
     padding: 10px 16px;
+    margin-top: 0.5rem;
 `;

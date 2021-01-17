@@ -129,6 +129,17 @@ The component to be used for any form field. It uses the dot notation for you to
 
 
 ```
+<LiveValue />
+```
+##### Props
+- fieldName: string
+
+**Required**. Correspond to the name of the Field the LiveValue will be listening to for any changes. On every change to the Field value, the LiveValues components associated to it will be updated using `refs` under the hood. This approach was used so there are no re-renders for `useState` updates.
+
+It uses `refs` in the `Forminho` context to be updated so it can only be used inside the `Forminho` component. See an example in the Examples section.
+
+
+```
 <Button />
 ```
 
@@ -292,6 +303,32 @@ const SimpleSignup = () => {
             )}
         </Form>
       </Forminho>
+    )
+}
+
+```
+
+### Using LiveValue to get the content of a Field when it is updated
+
+```javascript
+
+const Form = () => {
+    const onSubmitHandler = (values) => {
+        console.log(values);
+    };
+
+    return (
+        <div style={{width: '20rem', margin: '0 auto'}}>
+            <Forminho>
+                <p>You typed: <LiveValue fieldName='firstName' /></p>
+                <Form
+                    initialValues={{ firstName: '' }}
+                    onSubmitHandler={onSubmitHandler}
+                >
+                <Field.Input name='firstName' type='text' label='Your first name' placeholder='Type your first name...' />
+            </Form>
+        </Forminho>
+      </div>
     )
 }
 

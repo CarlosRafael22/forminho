@@ -1,7 +1,7 @@
 import React, { useRef, useContext } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 
-const Field = ({name, type, label, placeholder, style, children, onChange, value}: FieldProps) => {
+const Field = ({name, type, label, placeholder, style, children, onChange}: FieldProps) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
@@ -28,7 +28,6 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
 
     const DOMProps = {
         name,
-        value,
         placeholder,
         style: {...defaultInputStyle, ...style},
         onChange,
@@ -56,7 +55,7 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
     };
     
     return (
-        <div>
+        <div style={defaultDivStyle}>
             {label && <label htmlFor={`${name}-input`} style={getStyleForLabel(type)}>{label}</label>}
             {element()}
             <span ref={errorRef} style={{color: "red"}} />
@@ -91,7 +90,11 @@ const defaultInputStyle = {
     color: 'rgba(0,0,0,.87)',
     borderRadius: '.28571429rem',
     // width: '100%'
-}
+};
+
+const defaultDivStyle = {
+    marginTop: '0.5rem',
+};
 
 
 const ExportField = {

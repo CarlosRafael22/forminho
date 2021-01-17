@@ -32,7 +32,7 @@ const Form = ({
 
         if(onLiveErrorFeedback) onLiveErrorFeedback(formRefValues, context);
         console.log('CALLING ONCHANGE FROM THE SIGNUP')
-        if(onChangeHandler) onChangeHandler(event);
+        if(onChangeHandler) onChangeHandler(event, formRefValues);
     };
 
     const validatedValues = (values: ObjectType) => {

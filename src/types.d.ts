@@ -27,7 +27,7 @@ interface FormProps {
     onSubmitHandler: (currentValues: ObjectType) => void,
     initialValues: ObjectType,
     children?: Array<React.ReactElement>,
-    onChangeHandler?: (event: React.ChangeEvent<HTMLFormElement>) => void,
+    onChangeHandler?: (event: React.ChangeEvent<HTMLFormElement>, currentValues: ObjectType) => void,
     onLiveErrorFeedback?: (currentValues: ObjectType, context: FormContextType) => void,
     onValidationHandler?: (values: ObjectType) => void,
     submitButtonText?: string
@@ -43,8 +43,6 @@ type FieldProps = {
     style?: any,
     children?: Array<React.ReactElement>,
     onChange?: (event: GenericInputChangeEvent) => void,
-    value?: string,
-    defaultValue?: string,
     error?: string,
     render?: Function
 };

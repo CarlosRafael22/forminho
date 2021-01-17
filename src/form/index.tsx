@@ -1,23 +1,41 @@
-import React, { useState } from 'react';
+import React, { useRef, useContext, useState } from "react";
+import { FormContext, FormContextType } from '../Forminho';
+import { getValuesFromFormRef, updateLiveValue } from './utils';
 import Button from '../button';
 import Alert from '../alert';
-import Radio from '../fields/radio';
-import Checkbox from '../fields/checkbox';
 
-
-const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}: FormHandlerHookType): FormHandlerHookReturn => {
-    const [values, setValues] = useState(initialValues);
+const Form = ({
+    initialValues, onSubmitHandler, onChangeHandler, onLiveErrorFeedback, onValidationHandler, children, submitButtonText
+}: FormProps) => {
+    const formRef = useRef(null);
+    const context = useContext(FormContext) as FormContextType;
     const [error, setError] = useState(undefined);
+    // console.log("Context in the Form: ", context);
+    context.formRef = formRef;
+    context.initialValues = initialValues || {};
+    console.log("Context in the Form: ", context);
 
-    const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-        setValues({
-            ...values,
-            [event.target.name]: value
-        });
+    const onChange = (event: React.ChangeEvent<HTMLFormElement>) => {
+        console.log('CHANGE')
+        console.log(event.target.value)
+        const { name } = event.target;
+        console.log(name)
+
+        updateLiveValue(context, name);
+
+        const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
+        console.log(formRefValues)
+
+        console.log('Updating context.currentValues')
+        context.currentValues = formRefValues;
+        console.log(context)
+
+        if(onLiveErrorFeedback) onLiveErrorFeedback(formRefValues, context);
+        console.log('CALLING ONCHANGE FROM THE SIGNUP')
+        if(onChangeHandler) onChangeHandler(event);
     };
 
-    const validatedValues = () => {
+    const validatedValues = (values: ObjectType) => {
         try {
             if (onValidationHandler) onValidationHandler(values);
             setError(undefined);
@@ -28,91 +46,40 @@ const useValuesHandler = ({initialValues, onSubmitHandler, onValidationHandler}:
         }
     }
 
-    const submitHandler = (event: React.FormEvent) => {
+    const onSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (validatedValues()) {
-            onSubmitHandler(values);
-        }        
+        console.log('SUBMIT')
+        console.log('antes de mandar: ', formRef, context)
+        const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
+        // onSubmitHandler(formRefValues);
+        console.log('formRefValues: ', formRefValues)
+        if (validatedValues(formRefValues)) {
+            onSubmitHandler(formRefValues);
+        }
     }
 
-    return {
-        values,
-        onChangeHandler,
-        submitHandler,
-        error
-    };
-};
-
-
-const Form = ({initialValues, onSubmitHandler, onValidationHandler, children, submitButtonText}: FormProps) => {
-    const formHandler = useValuesHandler({initialValues, onSubmitHandler, onValidationHandler});
-
-    let ButtonToRender: React.ReactElement<any>;
-
-    const childrenWithFormProps = React.Children.map(children, (child: React.ReactElement<any>) => {
+    // Checks whether we need to render the buttons coming as children or the default one
+    let willRenderDefaultButton = true;
+    React.Children.map(children, (child: React.ReactElement<any>) => {
         if (React.isValidElement(child)) {
             console.log('CHILD')
             // const { type } = child;
             console.log(child.type)
             if (child.type === Button) {
-                ButtonToRender = child;
-                return null;
+                willRenderDefaultButton = false;
             }
-            console.log(child.type === Button)
-
-            // console.log(child.type.displayName)
-            // child.props.name gives Object of type 'unknown' error since we dont know what the the props are
-            // This error doesnt let the project build, to fix this we need to use Type Assertion
-            // A workaround to use Type Assertion on destructing is as follow:
-            // https://github.com/microsoft/TypeScript/issues/18229
-            const { props } = child as { props: InputFieldProps};
-            const propName = props.name;
-            // const { name } = child.props;
-
-            if (child.type === Radio) {
-                const newChild = React.cloneElement(child, {
-                    onChange: formHandler.onChangeHandler,
-                    stateValue: formHandler.values[propName]
-                } as Partial<InputFieldProps> );
-                return newChild;
-            }
-
-            if (child.type === Checkbox) {
-                const newChild = React.cloneElement(child, {
-                    onChange: formHandler.onChangeHandler,
-                    stateValue: formHandler.values[propName]
-                } as Partial<InputFieldProps> );
-                return newChild;
-            }
-
-            const newChild = React.cloneElement(child, {
-                onChange: formHandler.onChangeHandler,
-                value: formHandler.values[propName]
-            } as Partial<InputFieldProps> );
-            return newChild;
-        } else {
-            return null;
         }
     });
-
-    const renderButton = () => {
-        if(ButtonToRender) {
-            console.log('TEM BUTTONRENDER')
-            return (ButtonToRender)
-        } else {
-            console.log('NAO TEM BUTTON')
-            const button = submitButtonText ? <Button text={submitButtonText} /> : <Button />;
-            return button;
-        }
-    };
-
+  
+    console.log("REF DO FORM: ", formRef);
+    console.log('Rendering form...')
     return (
-        <form className="main-form" onSubmit={formHandler.submitHandler}>
-            {formHandler.error && <Alert text={formHandler.error} />}
-            {childrenWithFormProps}
-            {renderButton()}
-        </form>
-    )
-};
+      <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
+        {error && <Alert text={error as unknown as string} />}
+        {children}
+        {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}
+      </form>
+    );
+  };
 
 export default Form;

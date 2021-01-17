@@ -14,7 +14,7 @@ export default {
     component: Form
 } as Meta;
 
-interface TemplateProps extends FormHandlerHookType {
+interface TemplateProps extends FormProps {
     items: Array<InputFieldProps | ButtonProps>
 }
 
@@ -71,7 +71,7 @@ const Template: Story<TemplateProps> = ({items, ...args}: TemplateProps) => (
     </Form>
 );
 
-const defaultArgs: FormHandlerHookType = {
+const defaultArgs: FormProps = {
     initialValues: {name:''},
     onSubmitHandler: () => {},
 };
@@ -110,6 +110,13 @@ export const WithButtonAsChild = Template.bind({});
 WithButtonAsChild.args = {
     ...defaultArgs,
     items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args, CustomButton.args]
+};
+
+export const WithTwoButtonAsChildren = Template.bind({});
+WithTwoButtonAsChildren.args = {
+    ...defaultArgs,
+    items: [WithLabelAndPlaceholder.args, WithLabelAndPlaceholder.args, CustomButton.args,
+    {...CustomButton.args, text: 'Second send'}]
 };
 
 export const WithSelect = Template.bind({});

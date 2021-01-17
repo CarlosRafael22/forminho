@@ -7,11 +7,11 @@ A library to help you create simple forms without having to build the state and 
 Since this library is currently a study project, the installation is manual.
 
 With the project in your local machine, you would:
-1. 'yarn link' inside the simple-form folder for yarn to recognize it as a dependency.
-2. Install the lib in your project with 'yarn add simple-form'
-3. 'yarn link' inside your project's node_module/react folder for us to link this react with the react in the simple-form
-4. 'yarn link react' inside the simple-form folder for it to use the react from your own project
-Steps 3 and 4 are necessary for us to avoid the 'Invalid Hook Use' error since without it the react from simple-form would be different than the one in your project.
+1. 'yarn link' inside the forminho folder for yarn to recognize it as a dependency.
+2. Install the lib in your project with 'yarn add forminho'
+3. 'yarn link' inside your project's node_module/react folder for us to link this react with the react in the forminho
+4. 'yarn link react' inside the forminho folder for it to use the react from your own project
+Steps 3 and 4 are necessary for us to avoid the 'Invalid Hook Use' error since without it the react from forminho would be different than the one in your project.
 
 ## Usage
 

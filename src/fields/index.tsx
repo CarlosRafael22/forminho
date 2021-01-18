@@ -1,7 +1,7 @@
 import React, { useRef, useContext } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 
-const Field = ({name, type, label, placeholder, style, children, onChange}: FieldProps) => {
+const Field = ({name, type, label, placeholder, style, children, onChange, value}: FieldProps) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
@@ -28,6 +28,7 @@ const Field = ({name, type, label, placeholder, style, children, onChange}: Fiel
 
     const DOMProps = {
         name,
+        value, // Used for Radio fields and Checkbox fields when there are many with the same name
         placeholder,
         style: {...defaultInputStyle, ...style},
         onChange,

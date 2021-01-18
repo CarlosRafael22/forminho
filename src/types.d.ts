@@ -38,6 +38,7 @@ type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.Chang
 type FieldProps = {
     name: string,
     type?: string,
+    value?: string,
     label?: string,
     placeholder?: string,
     style?: any,

@@ -7,7 +7,7 @@ export default {
     component: Field.TextArea
 } as Meta;
 
-const Template = (args) => <Field.TextArea {...args} />;
+const Template = (args: TextAreaProps) => <Field.TextArea {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

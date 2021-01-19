@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { Default as DefaultCheckbox, GroupedCheckboxesOnlyWithValue, GroupedCheckboxesWithValueAndLabel } from '../stories/fields/Checkbox.stories'
 import { RadioWithValueAndLabel, RadioWithOnlyValue } from '../stories/fields/Radio.stories'
+import { WithOptionsPassed, WithLabel as SelectWithLabelAndChildren } from '../stories/fields/Select.stories'
 
 describe('Testing Checkbox cases', () => {
     it('should render checkbox', () => {
@@ -44,5 +45,27 @@ describe('Testing Radio cases', () => {
         render(<RadioWithOnlyValue {...RadioWithOnlyValue.args} />)
         screen.debug()
         expect(screen.getByLabelText(RadioWithOnlyValue.args.value)).toBeInTheDocument()
+    })
+})
+
+
+describe('Testing Select cases', () => {
+    it('should render select with options passed', () => {
+        render(<WithOptionsPassed {...WithOptionsPassed.args} />)
+        screen.debug()
+        expect(screen.getAllByRole('option').length).toBe(4)
+        WithOptionsPassed.args.options.forEach((option: string, i: number) => {
+            expect(screen.queryAllByRole('option')[i]).toHaveTextContent(option)
+        });
+    })
+
+    it('should render select with children and no options passed', () => {
+        render(<SelectWithLabelAndChildren {...SelectWithLabelAndChildren.args} />)
+        screen.debug()
+        expect(screen.getAllByRole('option').length).toBe(4)
+        // Using the options array of WithOptionsPassed since they should show the same children
+        WithOptionsPassed.args.options.forEach((option: string, i: number) => {
+            expect(screen.queryAllByRole('option')[i]).toHaveTextContent(option)
+        });
     })
 })

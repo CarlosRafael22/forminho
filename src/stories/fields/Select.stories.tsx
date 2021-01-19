@@ -7,14 +7,6 @@ export default {
     component: Field.Select
 } as Meta;
 
-// const Template: Story<SelectProps> = (args) => (
-//     <Field.Select {...args} >
-//         <option value='Chelsea'>Chelsea</option>
-//         <option value='Arsenal'>Arsenal</option>
-//         <option value='Tottenham'>Tottenham</option>
-//         <option value='West Ham'>West Ham</option>
-//     </Field.Select>
-// );
 const Template: Story<SelectProps> = (args) => (
     <Field.Select {...args} >
         {args.children}
@@ -25,10 +17,10 @@ export const Default = Template.bind({});
 Default.args = {
     type: 'select',
     name: 'team',
-    value: 'Arsenal',
+    value: 'Tottenham',
     children: [
-        <option value='Chelsea' key='1'>Chelsea</option>,
         <option value='Arsenal' key='2'>Arsenal</option>,
+        <option value='Chelsea' key='1'>Chelsea</option>,
         <option value='Tottenham' key='3'>Tottenham</option>,
         <option value='West Ham' key='4'>West Ham</option>
     ]
@@ -45,3 +37,12 @@ WithCustomStyle.args = {
     ...WithLabel.args,
     style: { backgroundColor: 'red', color: 'white' }
 };
+
+export const WithOptionsPassed = Template.bind({})
+WithOptionsPassed.args = {
+    type: 'select',
+    name: 'team',
+    label: 'Choose a team',
+    value: 'Arsenal',
+    options: ['Arsenal', 'Chelsea', 'Tottenham', 'West Ham']
+}

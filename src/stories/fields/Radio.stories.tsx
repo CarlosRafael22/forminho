@@ -2,7 +2,6 @@ import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Field from '../../fields';
 
-
 export default {
     title: 'Simple-Form/Radio Input',
     component: Field.Radio
@@ -16,6 +15,19 @@ Default.args = {
     value: 'Chelsea',
     label: 'Chelsea'
 };
+
+export const RadioWithOnlyValue = Template.bind({})
+RadioWithOnlyValue.args = {
+    name: 'team',
+    value: 'Chelsea'
+}
+
+export const RadioWithValueAndLabel = Template.bind({})
+RadioWithValueAndLabel.args = {
+    name: 'team',
+    value: 'Chelsea',
+    label: 'Chelsea - KTBFFH'
+}
 
 export const CustomStyle = Template.bind({});
 CustomStyle.args = {

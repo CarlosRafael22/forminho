@@ -1,7 +1,8 @@
 import React, { useRef, useContext } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
+import { isArrayOfStrings } from './utils'
 
-const Field = ({name, type, label, placeholder, style, children, onChange, value}: FieldProps) => {
+const Field = ({name, type, label, placeholder, style, children, onChange, value, options}: FieldProps) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
@@ -41,9 +42,10 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
     const element = () => {
         if (type === 'select') {
             const selectRef = inputRef as React.MutableRefObject<HTMLSelectElement>;
+            const options = getSelectOptions()
             return (
                 <select ref={selectRef} {...DOMProps}>
-                    {children}
+                    {options}
                 </select>
             );
         } else if (type === 'textarea') {
@@ -63,6 +65,17 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
             return value
         }
         return label
+    }
+
+    const getSelectOptions = () => {
+        if (isArrayOfStrings(options) && !children) {
+            // Received an array with the options values then we should create them
+            return options?.map((value, i) => (
+                <option value={value} key={i}>{value}</option>
+            ))
+        } else {
+            return children
+        }
     }
     
     return (

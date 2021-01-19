@@ -54,10 +54,20 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
             return <input ref={ref} {...{...DOMProps, type}} />;
         }
     };
+
+    const getLabel = (): (string | undefined) => {
+        // If they have label then it should return otherwise gets the value
+        // for when the user wants the value to be the same as label prop
+        if (type === 'checkbox' || type === 'radio') {
+            if (label) return label
+            return value
+        }
+        return label
+    }
     
     return (
         <div style={defaultDivStyle}>
-            {label && <label htmlFor={`${name}-input`} style={getStyleForLabel(type)}>{label}</label>}
+            {getLabel() && <label htmlFor={name} style={getStyleForLabel(type)}>{getLabel()}</label>}
             {element()}
             <span ref={errorRef} style={{color: "red"}} />
         </div>

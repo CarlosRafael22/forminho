@@ -41,8 +41,9 @@ type FieldProps = {
     value?: string,
     label?: string,
     placeholder?: string,
+    options?: Array<string>,
     style?: any,
-    children?: Array<React.ReactElement>,
+    children?: Array<React.ReactNode>,
     onChange?: (event: GenericInputChangeEvent) => void,
     error?: string,
     render?: Function

@@ -20,3 +20,17 @@ Custom.args = {
         color: 'white'
     }
 };
+
+export const WithCss = Template.bind({})
+WithCss.args = {
+    text: 'Send with css style',
+    css: `
+        background-color: red;
+        color: white;
+        font-size: 16px;
+
+        &:hover {
+            background-color: blue;
+        }
+    `
+}

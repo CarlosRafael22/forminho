@@ -1,23 +1,27 @@
-import React from 'react';
-import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
-import Button from './';
+import React from 'react'
+import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
+import Button from './'
+import { Custom as CustomButton } from './Button.stories'
 
 
 describe('Render Button', () => {
-    test('It should render without props', () => {
-        const { getByText } = render(<Button />);
-        expect(getByText('Submit')).toBeTruthy();
-    });
+    it('should render without props', () => {
+        render(<Button />);
+        expect(screen.getByText('Submit')).toBeInTheDocument();
+    })
 
-    test('It should render with props', () => {
+    it('should render with props', () => {
+        render(<CustomButton {...CustomButton.args} />);
+        const button = screen.getByText(CustomButton.args.text);
+        expect(button).toHaveStyle(CustomButton.args.style);
+    })
+
+    it('should render children if it was passed', () => {
         const props = {
-            text: 'Send',
-            style: { backgroundColor: 'red' }
-        };
-        const { getByText } = render(<Button {...props} />);
-        const button = getByText(props.text);
-        expect(button).toBeTruthy();
-        expect(button).toHaveStyle(props.style);
-    });
-});
+            children: [<p>Hello</p>]
+        }
+        render(<Button {...props} />)
+        expect(screen.getByRole('button', { name: /Hello/i })).toBeInTheDocument()
+    })
+})

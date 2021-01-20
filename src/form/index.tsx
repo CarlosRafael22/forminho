@@ -54,7 +54,7 @@ const Form = ({
         // onSubmitHandler(formRefValues);
         console.log('formRefValues: ', formRefValues)
         if (validatedValues(formRefValues)) {
-            onSubmitHandler(formRefValues);
+            if(onSubmitHandler) onSubmitHandler(formRefValues);
         }
     }
 

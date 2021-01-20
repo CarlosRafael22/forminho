@@ -4,6 +4,7 @@ import '@testing-library/jest-dom'
 import { Default as DefaultCheckbox, GroupedCheckboxesOnlyWithValue, GroupedCheckboxesWithValueAndLabel } from '../stories/fields/Checkbox.stories'
 import { RadioWithValueAndLabel, RadioWithOnlyValue } from '../stories/fields/Radio.stories'
 import { WithOptionsPassed, WithLabel as SelectWithLabelAndChildren } from '../stories/fields/Select.stories'
+import { Field } from '..'
 
 describe('Testing Checkbox cases', () => {
     it('should render checkbox', () => {
@@ -67,5 +68,18 @@ describe('Testing Select cases', () => {
         WithOptionsPassed.args.options.forEach((option: string, i: number) => {
             expect(screen.queryAllByRole('option')[i]).toHaveTextContent(option)
         });
+    })
+})
+
+
+describe('Testing Field Ref Forwarding', () => {
+    it('should receive the ref prop and call focus', () => {
+        const refCallback = (node: any) => {
+            console.log('Attached: ', node)
+            node && node.current!.focus()
+        }
+        render(<Field.Input ref={refCallback} name='name' placeholder='Type name' />)
+        screen.debug()
+        expect(screen.getByPlaceholderText(/Type name/i)).toHaveFocus()
     })
 })

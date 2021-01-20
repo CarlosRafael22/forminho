@@ -65,7 +65,9 @@ type InputFieldProps = {
 
 type ButtonProps = {
     text?: string,
-    style?: cssObject
+    style?: cssObject,
+    css?: string,
+    children?: Array<React.ReactNode>
 };
 
 type AlertProps = {

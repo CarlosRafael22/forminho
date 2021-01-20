@@ -1,21 +1,17 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useImperativeHandle } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 import { isArrayOfStrings } from './utils'
 
-const Field = ({name, type, label, placeholder, style, children, onChange, value, options}: FieldProps) => {
+const Field = ({name, type, label, placeholder, style, children, onChange, value, options}: FieldProps, ref?: any) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
     console.log('CONTEXT NO INPUT ---- ', fieldRefs, errorRefs)
-    // const errorRef = React.useCallback(node => {
-    //     if(node !== null) {
-    //         console.log(node);
-    //     }
-    //     return node;
-    // }, []);
 
-    // const { name: propName } = props;
-    // const refFunction = (input) => formContext.refs[name] = inputRef;
+    useImperativeHandle(ref, () => ({
+        current: inputRef.current
+    }))
+
     const appendRefs = () => {
         if (fieldRefs && errorRefs) {
             fieldRefs[name] = inputRef;
@@ -120,14 +116,19 @@ const defaultDivStyle = {
     marginTop: '0.5rem',
 };
 
+const forwardRef = (props: FieldProps, ref: React.ForwardedRef<GenericHTMLInput>) => Field(props, ref)
+const selectForwardRef = (props: FieldProps, ref: React.ForwardedRef<GenericHTMLInput>) => Field({...props, type: 'select'}, ref)
+const textareaForwardRef = (props: FieldProps, ref: React.ForwardedRef<GenericHTMLInput>) => Field({...props, type: 'textarea'}, ref)
+const radioForwardRef = (props: FieldProps, ref: React.ForwardedRef<GenericHTMLInput>) => Field({...props, type: 'radio'}, ref)
+const checkboxForwardRef = (props: FieldProps, ref: React.ForwardedRef<GenericHTMLInput>) => Field({...props, type: 'checkbox'}, ref)
 
+// Used Partial<FieldProps> because it was raising an error 'type ' ' is missing the following properties from type pick<FieldProps>' when using the Fields
 const ExportField = {
-    Input: (props: FieldProps) => Field(props),
-    Select: (props: FieldProps) => Field({...props, type: 'select'}),
-    TextArea: (props: FieldProps) => Field({...props, type: 'textarea'}),
-    Radio: (props: FieldProps) => Field({...props, type: 'radio'}),
-    Checkbox: (props: FieldProps) => Field({...props, type: 'checkbox'})
+    Input: React.forwardRef<GenericHTMLInput, Partial<FieldProps>>(forwardRef),
+    Select: React.forwardRef<GenericHTMLInput, Partial<FieldProps>>(selectForwardRef),
+    TextArea: React.forwardRef<GenericHTMLInput, Partial<FieldProps>>(textareaForwardRef),
+    Radio: React.forwardRef<GenericHTMLInput, Partial<FieldProps>>(radioForwardRef),
+    Checkbox: React.forwardRef<GenericHTMLInput, Partial<FieldProps>>(checkboxForwardRef)
 };
-
 
 export default ExportField;

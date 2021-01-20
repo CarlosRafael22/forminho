@@ -1,6 +1,6 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import Button from '../../button';
+import Button from '.';
 
 export default {
     title: 'Simple-Form/Button',

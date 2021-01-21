@@ -49,3 +49,17 @@ WithStyle.args = {
     ...WithLabelAndPlaceholder.args,
     style: { backgroundColor: 'red', color: 'white' }
 };
+
+export const WithCss = Template.bind({});
+WithCss.args = {
+    ...WithLabelAndPlaceholder.args,
+    css: `
+        background-color: black;
+        color: white;
+        font-size: 16px;
+
+        &:hover {
+            background-color: blue;
+        }
+    `
+};

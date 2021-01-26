@@ -35,15 +35,19 @@ interface FormProps {
 
 type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
 
-type FieldProps = {
+type StyleProps = {
+    style?: Object,
+    css?: string,
+    className?: string
+}
+
+type FieldProps = StyleProps & {
     name: string,
     type?: string,
     value?: string,
     label?: string,
     placeholder?: string,
     options?: Array<string>,
-    style?: Object,
-    css?: string,
     children?: Array<React.ReactNode>,
     onChange?: (event: GenericInputChangeEvent) => void,
     error?: string,
@@ -64,10 +68,8 @@ type InputFieldProps = {
     style?: cssObject
 };
 
-type ButtonProps = {
+type ButtonProps = StyleProps & {
     text?: string,
-    style?: cssObject,
-    css?: string,
     children?: Array<React.ReactNode>
 };
 

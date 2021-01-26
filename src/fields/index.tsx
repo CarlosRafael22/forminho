@@ -1,13 +1,24 @@
 import React, { useRef, useContext, useImperativeHandle } from 'react';
 import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 import { isArrayOfStrings } from './utils'
-import { constructCssStyleAndReturnClassName } from '../utils'
+import { getStylingProps } from '../utils/styling'
 
-const Field = ({name, type, label, placeholder, style, children, onChange, value, options, css}: FieldProps, ref?: any) => {
+const Field = ({
+    name,
+    type,
+    label,
+    placeholder,
+    style,
+    children,
+    onChange,
+    value,
+    options,
+    css,
+    className
+}: FieldProps, ref?: any) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
-    console.log('CONTEXT NO INPUT ---- ', fieldRefs, errorRefs)
 
     useImperativeHandle(ref, () => ({
         current: inputRef.current
@@ -36,23 +47,7 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
         'aria-label': name
     };
 
-    const getFieldsStyleProps = () => {
-        let fieldsProps
-        if (css) {
-            const className = constructCssStyleAndReturnClassName(css)
-            fieldsProps = {
-                className: className
-            }
-        } else {
-            fieldsProps = {
-                style: {...defaultInputStyle, ...style}
-            }
-        }
-        console.log('FIELD PROOPS ----- ', fieldsProps)
-        return fieldsProps
-    }
-
-    const styleProps = getFieldsStyleProps()
+    const styleProps = getStylingProps(defaultInputStyle, { style, css, className })
 
     const DOMProps = {
         ...defaultProps,

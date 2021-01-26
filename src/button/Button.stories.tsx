@@ -28,6 +28,16 @@ WithCss.args = {
         background-color: red;
         color: white;
         font-size: 16px;
+    `
+}
+
+export const WithCssAndSelector = Template.bind({})
+WithCssAndSelector.args = {
+    text: 'Send with css style and &selector',
+    css: `
+        background-color: red;
+        color: white;
+        font-size: 16px;
 
         &:hover {
             background-color: blue;

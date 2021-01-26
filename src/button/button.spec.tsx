@@ -2,7 +2,7 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import Button from './'
-import { Custom as CustomButton, WithCss } from './Button.stories'
+import { Custom as CustomButton, WithCssAndSelector } from './Button.stories'
 
 
 describe('Render Button', () => {
@@ -26,8 +26,8 @@ describe('Render Button', () => {
     })
 
     it('should render with css style if prop was passed', () => {
-        render(<WithCss {...WithCss.args} />)
-        const button = screen.getByRole('button', { name: WithCss.args.text })
+        render(<WithCssAndSelector {...WithCssAndSelector.args} />)
+        const button = screen.getByRole('button', { name: WithCssAndSelector.args.text })
         screen.debug()
         expect(button).toBeInTheDocument()
         expect(button).toHaveStyle({

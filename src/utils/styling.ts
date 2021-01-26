@@ -1,4 +1,3 @@
-
 // There is a priority when getting the StylingProps. The style will be created from:
 // 1) css 2) style 3) className
 export const getStylingProps = (defaultStyle: ObjectType, { style, css, className }: { style?: ObjectType, css?: string, className?: string }) => {
@@ -13,12 +12,11 @@ export const getStylingProps = (defaultStyle: ObjectType, { style, css, classNam
     } else {
         stylingProps = { className }
     }
-    console.log('BUTTON PROOPS ----- ', stylingProps)
     return stylingProps
 }
 
 
-export const getSelectorsArray = (rulesString: string): Array<number| undefined> => {
+const getSelectorsArray = (rulesString: string): Array<number| undefined> => {
     const selectors = []
     for(let i=0;i<rulesString.length;i++){
         if(rulesString[i] === '&') {
@@ -28,7 +26,7 @@ export const getSelectorsArray = (rulesString: string): Array<number| undefined>
     return selectors
 }
 
-export const getSelectorsAndMainStyleBlocks = (rules: string, selectorPositions: Array<number | undefined>, className: string): [string, string, Array<string>] => {
+const getSelectorsAndMainStyleBlocks = (rules: string, selectorPositions: Array<number | undefined>, className: string): [string, string, Array<string>] => {
     if (selectorPositions.length > 0) {
         let rulesArray = []
         let mainBlock = rules
@@ -61,52 +59,21 @@ export const getSelectorsAndMainStyleBlocks = (rules: string, selectorPositions:
         }, '')
         const mainStyleBlock = `.${className} {${mainBlock.trim()}}`
         rulesArray.unshift(mainStyleBlock)
-        console.log('OS STYLEEEEEES ----------- ', mainStyleBlock, selectorBlocks)
 
         return [mainStyleBlock, selectorBlocks, rulesArray]
     }
-
     // If there are no special & for selectors then we return an array with the main rule for the class name
     return [rules, '', [`.${className} {${rules.trim()}}`]]
 }
 
-export const attachCssStyleToDocument = (parsedCssRules: string | undefined) => {
-    if (parsedCssRules) {
-        const style = document.createElement('style')
-        document.head.appendChild(style)
-        // document.getElementsByTagName('head')[0].appendChild(style)
-        // style.appendChild(document.createTextNode(parsedCssRules))
-        try {
-            console.log('THE PARSED RULE: ', parsedCssRules)
-            style.sheet?.insertRule(parsedCssRules)
-        } catch (error) {
-            console.log(error.name)
-            console.log('CIU NO ELSEEEEEEE')
-            style.sheet?.insertRule(`.first {
-                background-color: orange;
-                color: white;
-                font-size: 16px;}
-            `)
-            style.sheet?.insertRule(`.first:hover {
-                background-color: yellow;}
-            `)
-        }
-        console.log(' O STYLE ATTACHED -------- ', style)
-    }
-}
-
-export const attachCssRulesToDocument = (styleSheetRules: Array<string>) => {
+const attachCssRulesToDocument = (styleSheetRules: Array<string>) => {
     if (styleSheetRules.length > 0) {
         const style = document.createElement('style')
         document.head.appendChild(style)
-        // document.getElementsByTagName('head')[0].appendChild(style)
-        // style.appendChild(document.createTextNode(parsedCssRules))
         try {
-            console.log('THE PARSED RULE: ', styleSheetRules)
             styleSheetRules.forEach(rule => style.sheet?.insertRule(rule))
         } catch (error) {
-            console.log(error.name)
-            console.log('CIU NO ELSEEEEEEE')
+            console.log('FAILED TO PARSE RULE: ', error.name)
         }
     }
 }
@@ -114,19 +81,11 @@ export const attachCssRulesToDocument = (styleSheetRules: Array<string>) => {
 export const constructCssStyleAndReturnClassName = (css: string): string => {
     // First try to find a & for a selector then splice on it
     // If there are no & then we should wrap all these rules in a {} and defined a class name for it
-    console.log('CALLING CONSTRUUUUUUUCCTTTTTTTT -------')
     const generateRandomString = (length=6) => Math.random().toString(20).substr(2, length)
-    console.log(generateRandomString)
     const className = `styled-${generateRandomString(8)}`
-    console.log(className)
-    // const className = 'testinho'
 
     const selectorsPositions = getSelectorsArray(css)
     const [ ,  , styleSheetRules] = getSelectorsAndMainStyleBlocks(css, selectorsPositions, className)
-    // const parsedCssRules = (`${mainStyleBlock}
-    //     ${selectorsStyleBlocks}`)
-    // attachCssStyleToDocument(parsedCssRules)
     attachCssRulesToDocument(styleSheetRules)
-    console.log('CLASS NAMEEE ------ ', className)
     return className
 }

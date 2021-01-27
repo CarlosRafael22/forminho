@@ -4,6 +4,7 @@ import '@testing-library/jest-dom'
 import { Default as DefaultCheckbox, GroupedCheckboxesOnlyWithValue, GroupedCheckboxesWithValueAndLabel } from '../stories/fields/Checkbox.stories'
 import { RadioWithValueAndLabel, RadioWithOnlyValue } from '../stories/fields/Radio.stories'
 import { WithOptionsPassed, WithLabel as SelectWithLabelAndChildren } from '../stories/fields/Select.stories'
+import { WithPlaceholder, WithStyle, WithCss } from '../stories/fields/Input.stories'
 import { Field } from '..'
 
 describe('Testing Checkbox cases', () => {
@@ -14,7 +15,6 @@ describe('Testing Checkbox cases', () => {
 
     it('should have label from label prop when its provided', () => {
         render(<GroupedCheckboxesWithValueAndLabel {...GroupedCheckboxesWithValueAndLabel.args} />)
-        screen.debug()
         expect(screen.queryAllByRole('checkbox').length).toBe(2)
         expect(screen.getByLabelText(GroupedCheckboxesWithValueAndLabel.args.labels[0])).toBeInTheDocument()
         expect(screen.getByLabelText(GroupedCheckboxesWithValueAndLabel.args.labels[1])).toBeInTheDocument()
@@ -22,7 +22,6 @@ describe('Testing Checkbox cases', () => {
 
     it('should have label from value prop when label prop is not provided', () => {
         render(<GroupedCheckboxesOnlyWithValue {...GroupedCheckboxesOnlyWithValue.args} />)
-        screen.debug()
         expect(screen.queryAllByRole('checkbox').length).toBe(2)
         expect(screen.getByLabelText(GroupedCheckboxesOnlyWithValue.args.values[0])).toBeInTheDocument()
         expect(screen.getByLabelText(GroupedCheckboxesOnlyWithValue.args.values[1])).toBeInTheDocument()
@@ -38,13 +37,11 @@ describe('Testing Radio cases', () => {
 
     it('should have label from label prop when its provided', () => {
         render(<RadioWithValueAndLabel {...RadioWithValueAndLabel.args} />)
-        screen.debug()
         expect(screen.getByLabelText(RadioWithValueAndLabel.args.label)).toBeInTheDocument()
     })
 
     it('should have label from value prop when label prop is not provided', () => {
         render(<RadioWithOnlyValue {...RadioWithOnlyValue.args} />)
-        screen.debug()
         expect(screen.getByLabelText(RadioWithOnlyValue.args.value)).toBeInTheDocument()
     })
 })
@@ -53,7 +50,6 @@ describe('Testing Radio cases', () => {
 describe('Testing Select cases', () => {
     it('should render select with options passed', () => {
         render(<WithOptionsPassed {...WithOptionsPassed.args} />)
-        screen.debug()
         expect(screen.getAllByRole('option').length).toBe(4)
         WithOptionsPassed.args.options.forEach((option: string, i: number) => {
             expect(screen.queryAllByRole('option')[i]).toHaveTextContent(option)
@@ -62,7 +58,6 @@ describe('Testing Select cases', () => {
 
     it('should render select with children and no options passed', () => {
         render(<SelectWithLabelAndChildren {...SelectWithLabelAndChildren.args} />)
-        screen.debug()
         expect(screen.getAllByRole('option').length).toBe(4)
         // Using the options array of WithOptionsPassed since they should show the same children
         WithOptionsPassed.args.options.forEach((option: string, i: number) => {
@@ -79,7 +74,30 @@ describe('Testing Field Ref Forwarding', () => {
             node && node.current!.focus()
         }
         render(<Field.Input ref={refCallback} name='name' placeholder='Type name' />)
-        screen.debug()
         expect(screen.getByPlaceholderText(/Type name/i)).toHaveFocus()
+    })
+})
+
+describe('Testing Styling for basic Field.Input', () => {
+    it('should have class name based on className prop', () => {
+        const stylePropsArgs = { className: 'red' }
+        render(<WithPlaceholder {...{...WithPlaceholder.args, ...stylePropsArgs}} />)
+        expect(screen.getByPlaceholderText(WithPlaceholder.args.placeholder)).toHaveClass(stylePropsArgs.className)
+    })
+
+    it('should have style based on style prop', () => {
+        render(<WithStyle {...WithStyle.args} />)
+        screen.debug()
+        expect(screen.getByPlaceholderText(WithStyle.args.placeholder)).toHaveStyle(WithStyle.args.style)
+    })
+
+    it('should have style based on css prop', () => {
+        render(<WithCss {...WithCss.args} />)
+        screen.debug()
+        expect(screen.getByPlaceholderText(WithCss.args.placeholder)).toHaveStyle({
+            backgroundColor: 'black',
+            color: 'white',
+            fontSize: '16px'
+        })
     })
 })

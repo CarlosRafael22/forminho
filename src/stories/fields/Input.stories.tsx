@@ -9,39 +9,42 @@ export default {
 
 const Template: Story<FieldProps> = (args) => <Field.Input {...args} />;
 
-const defaultArgs = {
+export const Default = Template.bind({})
+Default.args = {
     type: 'text',
     name: 'name',
     value: ''
 };
 
+const placeholder = 'Enter your name'
+
 export const WithPlaceholder = Template.bind({});
 WithPlaceholder.args = {
-    ...defaultArgs,
-    placeholder: 'Enter your name'
+    ...Default.args,
+    placeholder
 };
 
 export const WithoutPlaceholder = Template.bind({});
 WithoutPlaceholder.args = {
-    ...defaultArgs
+    ...Default.args
 };
 
 export const WithDefaultValue = Template.bind({});
 WithDefaultValue.args = {
-    ...defaultArgs,
+    ...Default.args,
     value: 'Default Value'
 };
 
 export const WithLabel = Template.bind({});
 WithLabel.args = {
-    ...defaultArgs,
+    ...Default.args,
     label: 'Name'
 };
 
 export const WithLabelAndPlaceholder = Template.bind({});
 WithLabelAndPlaceholder.args = {
     ...WithLabel.args,
-    placeholder: 'Enter a name'
+    placeholder
 };
 
 export const WithStyle = Template.bind({});

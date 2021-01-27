@@ -1,6 +1,6 @@
 // There is a priority when getting the StylingProps. The style will be created from:
 // 1) css 2) style 3) className
-export const getStylingProps = (defaultStyle: ObjectType, { style, css, className }: { style?: ObjectType, css?: string, className?: string }) => {
+export const getStylingProps = (defaultStyle: ObjectType, { style, css, className }: { style?: ObjectType, css?: string, className?: string }): ObjectType => {
     let stylingProps
     if (css) {
         const className = constructCssStyleAndReturnClassName(css)

@@ -15,6 +15,12 @@ describe('Testing getStylingProps ', () => {
         expect(style).toEqual(stylePropsArgs)
     })
 
+    it('should return className if style is {}', () => {
+        const stylePropsArgs = { style: {}, className: 'redStyle' }
+        const style = getStylingProps(defaultStyle, stylePropsArgs)
+        expect(style).toEqual({ className: 'redStyle' })
+    })
+
     it('should return based on style object if passed', () => {
         // Also pass className: 'red' to test the getStylingProps priority since style comes before className
         const stylePropsArgs = { style: { fontSize: '46px', color: 'white' }, className: 'red' }

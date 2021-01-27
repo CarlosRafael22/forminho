@@ -1,11 +1,21 @@
-import React, { useRef, useContext, useState } from "react";
-import { FormContext, FormContextType } from '../Forminho';
-import { getValuesFromFormRef, updateLiveValue } from './utils';
-import Button from '../button';
-import Alert from '../alert';
+import React, { useRef, useContext, useState } from "react"
+import { FormContext, FormContextType } from '../Forminho'
+import { getValuesFromFormRef, updateLiveValue } from './utils'
+import { getStylingProps } from '../utils/styling'
+import Button from '../button'
+import Alert from '../alert'
 
 const Form = ({
-    initialValues, onSubmitHandler, onChangeHandler, onLiveErrorFeedback, onValidationHandler, children, submitButtonText
+    initialValues,
+    onSubmitHandler,
+    onChangeHandler,
+    onLiveErrorFeedback,
+    onValidationHandler,
+    children,
+    submitButtonText,
+    style,
+    css,
+    className
 }: FormProps) => {
     const formRef = useRef(null);
     const context = useContext(FormContext) as FormContextType;
@@ -70,11 +80,14 @@ const Form = ({
             }
         }
     });
+
+    const styleProps = getStylingProps({}, { style, css, className })
   
     console.log("REF DO FORM: ", formRef);
     console.log('Rendering form...')
+    console.log(styleProps)
     return (
-      <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
+      <form ref={formRef} onSubmit={onSubmit} onChange={onChange} {...styleProps}>
         {error && <Alert text={error as unknown as string} />}
         {children}
         {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}

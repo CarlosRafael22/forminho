@@ -78,3 +78,11 @@ export const updateLiveValue = (context: FormContextType, fieldName: string) => 
         });
     }
 };
+
+export const getUpdatedLiveValuesFromRefs = (liveValues: Object, formRefValues: Object) => {
+    let updatedLiveValues = {}
+    Object.keys(liveValues).forEach(field => {
+        updatedLiveValues[field] = formRefValues[field]
+    })
+    return updatedLiveValues
+}

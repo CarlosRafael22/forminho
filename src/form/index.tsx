@@ -1,19 +1,24 @@
 import React, { useRef, useContext, useState } from "react";
 import { FormContext, FormContextType } from '../Forminho';
-import { getValuesFromFormRef, updateLiveValue } from './utils';
+import { getValuesFromFormRef, updateLiveValue, getValuesFromForm } from './utils';
 import Button from '../button';
 import Alert from '../alert';
 
 const Form = ({
     initialValues, onSubmitHandler, onChangeHandler, onLiveErrorFeedback, onValidationHandler, children, submitButtonText
 }: FormProps) => {
-    const formRef = useRef(null);
+    let formRef = useRef<HTMLFormElement | null>(null);
+    // let formRef: React.MutableRefObject<HTMLFormElement | null>;
     const context = useContext(FormContext) as FormContextType;
     const [error, setError] = useState(undefined);
     // console.log("Context in the Form: ", context);
-    context.formRef = formRef;
+    // context.formRef = formRef;
     context.initialValues = initialValues || {};
     console.log("Context in the Form: ", context);
+
+    // const formElement = document.querySelector('form');
+    // const formData = new FormData(formElement)
+    let formData: any;
 
     const onChange = (event: React.ChangeEvent<HTMLFormElement>) => {
         console.log('CHANGE')
@@ -25,6 +30,9 @@ const Form = ({
 
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
         console.log(formRefValues)
+        console.log('FORM DATA NO ONCHANGEEEE: ', formData, Array.from(formData.entries()))
+        const newFormValues = getValuesFromForm(formRef.current as HTMLFormElement)
+        console.log('NEW FORM DATA NO ONCHANGEEEE: ', newFormValues)
 
         console.log('Updating context.currentValues')
         context.currentValues = formRefValues;
@@ -70,11 +78,29 @@ const Form = ({
             }
         }
     });
+
+    const callbackRef = (node: HTMLFormElement) => {
+        if (node) {
+            console.log('CALLBACK DO FORM REF: ', node)
+            formRef.current = node;
+            context.formRef = formRef;
+            console.log('CONTEXT DPS DO CALLBACK REF: ', context)
+            formData = new FormData(node)
+            console.log('FORM DATA: ', formData)
+            formData.has('email')
+            formData.has('firstName')
+            //@ts-ignore
+            for (let a of formData.entries()) {
+                console.log('FORM FIELD: ', a)
+            }
+            console.log('FORM DATA: ', Array.from(formData.entries()))
+        }
+    }
   
-    console.log("REF DO FORM: ", formRef);
+    // console.log("REF DO FORM: ", formRef);
     console.log('Rendering form...')
     return (
-      <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
+      <form ref={callbackRef} onSubmit={onSubmit} onChange={onChange}>
         {error && <Alert text={error as unknown as string} />}
         {children}
         {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}

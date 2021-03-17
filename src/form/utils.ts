@@ -78,3 +78,17 @@ export const updateLiveValue = (context: FormContextType, fieldName: string) => 
         });
     }
 };
+
+export const getValuesFromForm = (form: HTMLFormElement) => {
+    const newFormData = new FormData(form)
+    // @ts-ignore
+    const entriesArray = Array.from(newFormData.entries())
+    const values = entriesArray.reduce((previous: Object, current: string[]) => {
+        return {
+            ...previous,
+            [current[0]]: current[1]
+        }
+    }, {})
+    console.log('OS VALUES DO FORM DATA: ', values)
+    return values;
+}

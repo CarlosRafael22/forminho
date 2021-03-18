@@ -30,8 +30,7 @@ interface FormProps {
     onChangeHandler?: (event: React.ChangeEvent<HTMLFormElement>, currentValues: ObjectType) => void,
     onLiveErrorFeedback?: (currentValues: ObjectType, context: FormContextType) => void,
     onValidationHandler?: (values: ObjectType) => void,
-    submitButtonText?: string,
-    withLiveValues?: string[]
+    submitButtonText?: string
 }
 
 type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;

@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useState, useImperativeHandle } from "react";
 import { FormContext, FormContextType } from '../Forminho';
-import { getValuesFromFormRef } from './utils';
+import { getValuesFromFormRef, checkHasFilledValues } from './utils';
 import { getStylingProps } from '../utils/styling'
 import Button from '../button';
 import Alert from '../alert';
@@ -24,7 +24,7 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
 }, ref) => {
     const formRef = useRef<HTMLFormElement>(null);
     const context = useContext(FormContext) as FormContextType;
-    const [error, setError] = useState(undefined);
+    const [error, setError] = useState<string | undefined>(undefined);
 
     context.formRef = formRef;
     context.initialValues = initialValues || {};
@@ -63,7 +63,12 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
         event.preventDefault();
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
         // onSubmitHandler(formRefValues);
-        console.log('formRefValues NO SUBMIT: ', formRefValues)
+        // If formRefValues equals to initialValues then the form hasnt been filled and we should call submit
+        if (!checkHasFilledValues(formRefValues, initialValues)) {
+            setError('Please fill up the form.')
+            return
+        }
+
         if (validatedValues(formRefValues)) {
             if(onSubmitHandler) onSubmitHandler(formRefValues);
         }

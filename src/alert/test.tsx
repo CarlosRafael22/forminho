@@ -14,10 +14,10 @@ describe('Testing Alert rendering', () => {
         expect(getByText(props.text)).toBeTruthy();
     });
 
-    test('It should render with text prop', () => {
+    test('It should render with custom style prop', () => {
         const props = {
             text: 'An error occurred',
-            style: { backgroundColor: 'red' }
+            style: { backgroundColor: 'blue' }
         };
         const { getByText, getByRole } = render(<Alert {...props} />);
 

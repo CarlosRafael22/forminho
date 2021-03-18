@@ -1,6 +1,6 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import Alert from '../../alert';
+import Alert from '.';
 
 
 export default {

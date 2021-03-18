@@ -75,3 +75,17 @@ export const getUpdatedLiveValuesFromRefs = (liveValues: Object, formRefValues: 
     })
     return updatedLiveValues
 }
+
+export const checkHasFilledValues = (formRefValues: Object, initialValues: Object): boolean => {
+    for (const key of Object.keys(initialValues)) {
+        if (typeof initialValues[key] === 'string') {
+            if (formRefValues[key] != '') return true
+        } else if (Array.isArray(initialValues[key])) {
+            if (formRefValues[key].length > 0) return true
+        } else if (typeof initialValues[key] === 'boolean') {
+            // Regardless of the value, if it has an boolean we assume its been filled
+            return true
+        }
+    }
+    return false
+}

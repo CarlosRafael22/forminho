@@ -76,8 +76,6 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
         }
     });
   
-    console.log("O FORWARD REF 2: ", ref);
-    console.log('Rendering form with context: ', context)
     return (
         <FormContext.Provider value={context}>
             <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>

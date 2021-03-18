@@ -14,7 +14,6 @@ const Button = ({text = 'Submit', style = {}, children, css}: ButtonProps) => {
                 style: {...defaultStyle, ...style}
             }
         }
-        console.log('BUTTON PROOPS ----- ', buttonProps)
         return buttonProps
     }
 

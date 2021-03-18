@@ -24,8 +24,6 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
 
     context.formRef = formRef;
     context.initialValues = initialValues || {};
-    console.log("Context in the Form: ", context);
-    console.log('O FORWARD REF: ', ref, formRef);
 
     useImperativeHandle(ref, () => ({
         current: formRef.current,
@@ -33,15 +31,10 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
     }));
 
     const onChange = (event: React.ChangeEvent<HTMLFormElement>) => {
-        console.log('CHANGE')
-        console.log(event.target.value)
-        const { name } = event.target;
-        console.log(name)
-
         // updateLiveValue(context, name);
 
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
-        console.log(formRefValues)
+        // console.log(formRefValues)
         console.log('Updating context.currentValues')
         context.currentValues = formRefValues;
         console.log(context)
@@ -64,11 +57,9 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
 
     const onSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('SUBMIT')
-        console.log('antes de mandar: ', formRef, context)
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
         // onSubmitHandler(formRefValues);
-        console.log('formRefValues: ', formRefValues)
+        console.log('formRefValues NO SUBMIT: ', formRefValues)
         if (validatedValues(formRefValues)) {
             if(onSubmitHandler) onSubmitHandler(formRefValues);
         }
@@ -78,10 +69,8 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
     let willRenderDefaultButton = true;
     React.Children.map(children, (child: React.ReactElement<any>) => {
         if (React.isValidElement(child)) {
-            console.log('CHILD')
-            // const { type } = child;
-            console.log(child.type)
-            if (child.type === Button) {
+            const { type } = child;
+            if (type === Button) {
                 willRenderDefaultButton = false;
             }
         }

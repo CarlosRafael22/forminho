@@ -3,7 +3,7 @@ import { FormContext, FormContextType, GenericHTMLInput } from '../Forminho';
 import { isArrayOfStrings } from './utils'
 import { constructCssStyleAndReturnClassName } from '../utils'
 
-const Field = ({name, type, label, placeholder, style, children, onChange, value, options, css}: FieldProps, ref?: any) => {
+const Field = ({name, type, label, placeholder, style, children, onChange, value, options, css, liveUpdate}: FieldProps, ref?: any) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
@@ -24,12 +24,18 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
     };
     appendRefs();
 
+    const onChangeHandler = (event: GenericInputChangeEvent) => {
+        // liveUpdate is a callback to update the state of the parent component which wants to have real time updates of this field
+        if(liveUpdate) liveUpdate(event.target.value)
+        if(onChange) onChange(event)
+    }
+
     const defaultProps = {
         name,
         value, // Used for Radio fields and Checkbox fields when there are many with the same name
         placeholder,
         // style: {...defaultInputStyle, ...style},
-        onChange,
+        onChange: onChangeHandler,
         id: name,
         defaultValue: initialValues ? initialValues[name]: undefined,
         'aria-describedby': `${name}-help`,

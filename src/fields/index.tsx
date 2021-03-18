@@ -7,7 +7,6 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
     const { fieldRefs, errorRefs, initialValues } = useContext(FormContext) as FormContextType;
-    console.log('CONTEXT NO INPUT ---- ', fieldRefs, errorRefs)
 
     useImperativeHandle(ref, () => ({
         current: inputRef.current
@@ -17,9 +16,9 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
         if (fieldRefs && errorRefs) {
             fieldRefs[name] = inputRef;
             errorRefs[name] = errorRef;
-            console.log('Refs Appended ', fieldRefs, errorRefs);
+            // console.log('Refs Appended ', fieldRefs, errorRefs);
         } else {
-            console.log('Refs NOT Appended ', fieldRefs, errorRefs);
+            // console.log('Refs NOT Appended ', fieldRefs, errorRefs);
         }
     };
     appendRefs();
@@ -30,6 +29,11 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
         if(onChange) onChange(event)
     }
 
+    const getDefaultValue = () => {
+        if ((type === 'radio') || (type === 'checkbox')) return undefined
+        return initialValues ? initialValues[name]: undefined
+    }
+
     const defaultProps = {
         name,
         value, // Used for Radio fields and Checkbox fields when there are many with the same name
@@ -37,7 +41,7 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
         // style: {...defaultInputStyle, ...style},
         onChange: onChangeHandler,
         id: name,
-        defaultValue: initialValues ? initialValues[name]: undefined,
+        defaultValue: getDefaultValue(),
         'aria-describedby': `${name}-help`,
         'aria-label': name
     };
@@ -54,7 +58,6 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
                 style: {...defaultInputStyle, ...style}
             }
         }
-        console.log('FIELD PROOPS ----- ', fieldsProps)
         return fieldsProps
     }
 
@@ -64,8 +67,6 @@ const Field = ({name, type, label, placeholder, style, children, onChange, value
         ...defaultProps,
         ...styleProps
     }
-
-    console.log('O DOMPORRRROSP ----- ', DOMProps)
 
     const element = () => {
         if (type === 'select') {

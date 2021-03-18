@@ -1,18 +1,39 @@
-import React, { useRef, useContext, useState, useEffect } from "react";
+import React, { useRef, useContext, useState, useImperativeHandle } from "react";
 import { FormContext, FormContextType } from '../Forminho';
-import { getValuesFromFormRef, updateLiveValue, getUpdatedLiveValuesFromRefs } from './utils';
+import { getValuesFromFormRef, updateLiveValue } from './utils';
 import Button from '../button';
 import Alert from '../alert';
 
-const getInitialLiveValues = (liveValuesStrings?: string[]) => {
-    if (!liveValuesStrings) return null
-    return liveValuesStrings.reduce((previous, current) => {
-        return { ...previous, [current]: '' }
-    }, {})
+// const getInitialLiveValues = (liveValuesStrings?: string[]) => {
+//     if (!liveValuesStrings) return null
+//     return liveValuesStrings.reduce((previous, current) => {
+//         return { ...previous, [current]: '' }
+//     }, {})
+// }
+
+// export const useLiveValues = (withLiveValues?: string[]) => {
+//     const [liveValues, setLiveValues] = useState<Object | undefined>(undefined);
+
+//     useEffect(() => {
+//         const initialLiveValues = getInitialLiveValues(withLiveValues);
+//         console.log('initialLiveValues NO DIDMOUNT: ', initialLiveValues)
+//         if (initialLiveValues !== null) {
+//             setLiveValues(initialLiveValues)
+//         }
+//     }, [])
+
+//     return {
+//         liveValues,
+//         setLiveValues
+//     }
+// }
+
+type IncrementedRef = {
+    // liveValues: Object | undefined,
+    current: HTMLFormElement | null
 }
 
-
-const Form = ({
+const Form = React.forwardRef<IncrementedRef, FormProps>(({
     initialValues,
     onSubmitHandler,
     onChangeHandler,
@@ -20,24 +41,22 @@ const Form = ({
     onValidationHandler,
     children,
     submitButtonText,
-    withLiveValues
-}: FormProps) => {
-    const formRef = useRef(null);
+    // withLiveValues
+}, ref) => {
+    const formRef = useRef<HTMLFormElement>(null);
     const context = useContext(FormContext) as FormContextType;
     const [error, setError] = useState(undefined);
-    const [liveValues, setLiveValues] = useState<Object | undefined>(undefined);
-    
-    useEffect(() => {
-        const initialLiveValues = getInitialLiveValues(withLiveValues);
-        console.log('initialLiveValues NO DIDMOUNT: ', initialLiveValues)
-        if (initialLiveValues !== null) {
-            setLiveValues(initialLiveValues)
-        }
-    }, [])
-    // console.log("Context in the Form: ", context);
+    // const { liveValues, setLiveValues } = useLiveValues(withLiveValues)
+
     context.formRef = formRef;
     context.initialValues = initialValues || {};
     console.log("Context in the Form: ", context);
+    console.log('O FORWARD REF: ', ref, formRef);
+
+    useImperativeHandle(ref, () => ({
+        current: formRef.current,
+        // liveValues
+    }));
 
     const onChange = (event: React.ChangeEvent<HTMLFormElement>) => {
         console.log('CHANGE')
@@ -51,18 +70,18 @@ const Form = ({
         console.log(formRefValues)
 
         // Vai atualizar o liveValues se for preciso
-        if(liveValues) {
-            const updatedLiveValues = getUpdatedLiveValuesFromRefs(liveValues, formRefValues)
-            console.log('updatedLiveValues NO ONCHANGE: ', updatedLiveValues)
-            if (liveValues !== updatedLiveValues) {
-                console.log('DIFERENTE DO STATE')
-                setLiveValues(updatedLiveValues)
-            } else {
-                console.log('MESMO QUE STATE')
-            }
-            // updateLiveValueState(updatedLiveValues)
-        }
-        console.log('OS LIVEVALUES: ', liveValues)
+        // if(liveValues) {
+        //     const updatedLiveValues = getUpdatedLiveValuesFromRefs(liveValues, formRefValues)
+        //     console.log('updatedLiveValues NO ONCHANGE: ', updatedLiveValues)
+        //     if (liveValues !== updatedLiveValues) {
+        //         console.log('DIFERENTE DO STATE')
+        //         setLiveValues(updatedLiveValues)
+        //     } else {
+        //         console.log('MESMO QUE STATE')
+        //     }
+        //     // updateLiveValueState(updatedLiveValues)
+        // }
+        // console.log('OS LIVEVALUES: ', liveValues)
 
 
         console.log('Updating context.currentValues')
@@ -110,16 +129,18 @@ const Form = ({
         }
     });
   
-    console.log("REF DO FORM: ", formRef);
-    console.log('Rendering form...')
-    console.log('O LIVE VALUE STATE: ', liveValues)
+    console.log("O FORWARD REF 2: ", ref);
+    console.log('Rendering form with context: ', context)
+    // console.log('O LIVE VALUE STATE: ', liveValues)
     return (
-      <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
-        {error && <Alert text={error as unknown as string} />}
-        {children}
-        {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}
-      </form>
+        <FormContext.Provider value={context}>
+            <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
+                {error && <Alert text={error as unknown as string} />}
+                {children}
+                {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}
+            </form>
+        </FormContext.Provider>
     );
-  };
+  });
 
 export default Form;

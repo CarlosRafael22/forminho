@@ -48,7 +48,8 @@ type FieldProps = {
     children?: Array<React.ReactNode>,
     onChange?: (event: GenericInputChangeEvent) => void,
     error?: string,
-    render?: Function
+    render?: Function,
+    liveUpdate?: Function
 };
 
 type LiveValueProps = {

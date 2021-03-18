@@ -1,4 +1,4 @@
-import { FormContextType, ObjectType, GenericHTMLInput } from '../Forminho';
+import { FormContextType, ObjectType } from '../Forminho';
 
 export const getRefKeys = (refs: {[key:string]: any}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
 
@@ -66,17 +66,6 @@ export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormEle
     }, {});
     // console.log('VALUES FROM FORM REF ', values)
     return values;
-};
-
-export const updateLiveValue = (context: FormContextType, fieldName: string) => {
-    if (context.liveValuesRefs && context.liveValuesRefs[fieldName]) {
-        context.liveValuesRefs[fieldName].forEach(liveValueSpan => {
-            // const liveValueSpan = context.liveValuesRefs[fieldName].current as HTMLSpanElement;
-            const fieldRefCurrent = context.fieldRefs[fieldName].current as GenericHTMLInput;
-            liveValueSpan.innerText = fieldRefCurrent.value;
-            console.log(liveValueSpan.innerText)
-        });
-    }
 };
 
 export const getUpdatedLiveValuesFromRefs = (liveValues: Object, formRefValues: Object) => {

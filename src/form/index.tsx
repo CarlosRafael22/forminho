@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useState, useImperativeHandle } from "react";
 import { FormContext, FormContextType } from '../Forminho';
-import { getValuesFromFormRef, updateLiveValue } from './utils';
+import { getValuesFromFormRef } from './utils';
 import Button from '../button';
 import Alert from '../alert';
 
@@ -38,7 +38,7 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
         const { name } = event.target;
         console.log(name)
 
-        updateLiveValue(context, name);
+        // updateLiveValue(context, name);
 
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
         console.log(formRefValues)

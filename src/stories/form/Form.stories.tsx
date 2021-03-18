@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Form from '../../form';
-import { WithPlaceholder, WithLabel, WithLabelAndPlaceholder } from '../fields/InputField.stories';
+import { WithPlaceholder, WithLabel, WithLabelAndPlaceholder } from '../fields/Input.stories';
 import Field from '../../fields';
 import { Custom as CustomButton } from '../../button/Button.stories';
 import Button from '../../button';
@@ -135,4 +135,27 @@ export const WithCheckbox = Template.bind({});
 WithCheckbox.args = {
     ...defaultArgs,
     items: [WithPlaceholder.args, DefaultCheckbox.args]
+};
+
+export const WithStyle = Template.bind({});
+WithStyle.args = {
+    ...WithCheckbox.args,
+    style: { backgroundColor: 'blue', color: 'white', width: '50%', margin: '0 auto'}
+};
+
+export const WithCss = Template.bind({});
+WithCss.args = {
+    ...WithCheckbox.args,
+    css:`
+        background-color: red;
+        color: white;
+        width: 50%;
+        margin: 0 auto;
+    `
+};
+
+export const WithClassname = Template.bind({});
+WithClassname.args = {
+    ...WithCheckbox.args,
+    className: 'blue-test'
 };

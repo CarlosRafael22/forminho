@@ -1,6 +1,7 @@
 import React, { useRef, useContext, useState, useImperativeHandle } from "react";
 import { FormContext, FormContextType } from '../Forminho';
 import { getValuesFromFormRef } from './utils';
+import { getStylingProps } from '../utils/styling'
 import Button from '../button';
 import Alert from '../alert';
 
@@ -16,7 +17,10 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
     onLiveErrorFeedback,
     onValidationHandler,
     children,
-    submitButtonText
+    submitButtonText,
+    style,
+    css,
+    className
 }, ref) => {
     const formRef = useRef<HTMLFormElement>(null);
     const context = useContext(FormContext) as FormContextType;
@@ -75,10 +79,12 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
             }
         }
     });
-  
+
+    const styleProps = getStylingProps({}, { style, css, className })
+ 
     return (
         <FormContext.Provider value={context}>
-            <form ref={formRef} onSubmit={onSubmit} onChange={onChange}>
+            <form ref={formRef} onSubmit={onSubmit} onChange={onChange} {...styleProps}>
                 {error && <Alert text={error as unknown as string} />}
                 {children}
                 {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}

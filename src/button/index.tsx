@@ -1,24 +1,11 @@
 import React, { CSSProperties } from 'react';
-import { constructCssStyleAndReturnClassName } from '../utils'
+import { getStylingProps } from '../utils/styling'
 
-const Button = ({text = 'Submit', style = {}, children, css}: ButtonProps) => {
-    const buttonProps = () => {
-        let buttonProps
-        if (css) {
-            const className = constructCssStyleAndReturnClassName(css)
-            buttonProps = {
-                className: className
-            }
-        } else {
-            buttonProps = {
-                style: {...defaultStyle, ...style}
-            }
-        }
-        return buttonProps
-    }
+const Button = ({text = 'Submit', style = {}, children, css, className}: ButtonProps) => {
+    const styleProps = getStylingProps(defaultStyle, { style, css, className })
 
     return (
-        <button {...buttonProps()}>{children ? children : text}</button>
+        <button {...styleProps}>{children ? children : text}</button>
     )
 }
 

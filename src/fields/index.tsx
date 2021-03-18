@@ -14,7 +14,8 @@ const Field = ({
     value,
     options,
     css,
-    className
+    className,
+    liveUpdate
 }: FieldProps, ref?: any) => {
     const inputRef = useRef<GenericHTMLInput>(null);
     const errorRef = useRef<HTMLSpanElement>(null);
@@ -28,21 +29,32 @@ const Field = ({
         if (fieldRefs && errorRefs) {
             fieldRefs[name] = inputRef;
             errorRefs[name] = errorRef;
-            console.log('Refs Appended ', fieldRefs, errorRefs);
+            // console.log('Refs Appended ', fieldRefs, errorRefs);
         } else {
-            console.log('Refs NOT Appended ', fieldRefs, errorRefs);
+            // console.log('Refs NOT Appended ', fieldRefs, errorRefs);
         }
     };
     appendRefs();
+
+    const onChangeHandler = (event: GenericInputChangeEvent) => {
+        // liveUpdate is a callback to update the state of the parent component which wants to have real time updates of this field
+        if(liveUpdate) liveUpdate(event.target.value)
+        if(onChange) onChange(event)
+    }
+
+    const getDefaultValue = () => {
+        if ((type === 'radio') || (type === 'checkbox')) return undefined
+        return initialValues ? initialValues[name]: undefined
+    }
 
     const defaultProps = {
         name,
         value, // Used for Radio fields and Checkbox fields when there are many with the same name
         placeholder,
         // style: {...defaultInputStyle, ...style},
-        onChange,
+        onChange: onChangeHandler,
         id: name,
-        defaultValue: initialValues ? initialValues[name]: undefined,
+        defaultValue: getDefaultValue(),
         'aria-describedby': `${name}-help`,
         'aria-label': name
     };
@@ -53,8 +65,6 @@ const Field = ({
         ...defaultProps,
         ...styleProps
     }
-
-    console.log('O DOMPORRRROSP ----- ', DOMProps)
 
     const element = () => {
         if (type === 'select') {

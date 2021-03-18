@@ -1,11 +1,16 @@
-import React, { useRef, useContext, useState } from "react"
-import { FormContext, FormContextType } from '../Forminho'
-import { getValuesFromFormRef, updateLiveValue } from './utils'
+import React, { useRef, useContext, useState, useImperativeHandle } from "react";
+import { FormContext, FormContextType } from '../Forminho';
+import { getValuesFromFormRef } from './utils';
 import { getStylingProps } from '../utils/styling'
-import Button from '../button'
-import Alert from '../alert'
+import Button from '../button';
+import Alert from '../alert';
 
-const Form = ({
+type IncrementedRef = {
+    // liveValues: Object | undefined,
+    current: HTMLFormElement | null
+}
+
+const Form = React.forwardRef<IncrementedRef, FormProps>(({
     initialValues,
     onSubmitHandler,
     onChangeHandler,
@@ -16,26 +21,24 @@ const Form = ({
     style,
     css,
     className
-}: FormProps) => {
-    const formRef = useRef(null);
+}, ref) => {
+    const formRef = useRef<HTMLFormElement>(null);
     const context = useContext(FormContext) as FormContextType;
     const [error, setError] = useState(undefined);
-    // console.log("Context in the Form: ", context);
+
     context.formRef = formRef;
     context.initialValues = initialValues || {};
-    console.log("Context in the Form: ", context);
+
+    useImperativeHandle(ref, () => ({
+        current: formRef.current,
+        // liveValues
+    }));
 
     const onChange = (event: React.ChangeEvent<HTMLFormElement>) => {
-        console.log('CHANGE')
-        console.log(event.target.value)
-        const { name } = event.target;
-        console.log(name)
-
-        updateLiveValue(context, name);
+        // updateLiveValue(context, name);
 
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
-        console.log(formRefValues)
-
+        // console.log(formRefValues)
         console.log('Updating context.currentValues')
         context.currentValues = formRefValues;
         console.log(context)
@@ -58,11 +61,9 @@ const Form = ({
 
     const onSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('SUBMIT')
-        console.log('antes de mandar: ', formRef, context)
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
         // onSubmitHandler(formRefValues);
-        console.log('formRefValues: ', formRefValues)
+        console.log('formRefValues NO SUBMIT: ', formRefValues)
         if (validatedValues(formRefValues)) {
             if(onSubmitHandler) onSubmitHandler(formRefValues);
         }
@@ -72,27 +73,24 @@ const Form = ({
     let willRenderDefaultButton = true;
     React.Children.map(children, (child: React.ReactElement<any>) => {
         if (React.isValidElement(child)) {
-            console.log('CHILD')
-            // const { type } = child;
-            console.log(child.type)
-            if (child.type === Button) {
+            const { type } = child;
+            if (type === Button) {
                 willRenderDefaultButton = false;
             }
         }
     });
 
     const styleProps = getStylingProps({}, { style, css, className })
-  
-    console.log("REF DO FORM: ", formRef);
-    console.log('Rendering form...')
-    console.log(styleProps)
+ 
     return (
-      <form ref={formRef} onSubmit={onSubmit} onChange={onChange} {...styleProps}>
-        {error && <Alert text={error as unknown as string} />}
-        {children}
-        {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}
-      </form>
+        <FormContext.Provider value={context}>
+            <form ref={formRef} onSubmit={onSubmit} onChange={onChange} {...styleProps}>
+                {error && <Alert text={error as unknown as string} />}
+                {children}
+                {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}
+            </form>
+        </FormContext.Provider>
     );
-  };
+  });
 
 export default Form;

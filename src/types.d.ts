@@ -38,7 +38,8 @@ type FieldProps = StyleProps & {
     children?: Array<React.ReactNode>,
     onChange?: (event: GenericInputChangeEvent) => void,
     error?: string,
-    render?: Function
+    render?: Function,
+    liveUpdate?: Function
 };
 
 type LiveValueProps = {
@@ -115,7 +116,6 @@ type RefsObject<T> = {
 
 type FormContextType = {
     formRef: React.MutableRefObject<HTMLFormElement | null>,
-    liveValuesRefs: { [key: string]: Array<HTMLSpanElement>},
     fieldRefs: RefsObject<GenericHTMLInput | null>,
     errorRefs: RefsObject<HTMLSpanElement | null>,
     initialValues: ObjectType,

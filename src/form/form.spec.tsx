@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { render, fireEvent, screen } from '@testing-library/react';
 import Field from '../fields';
 import Form from ".";
+import Button from '../button';
 // import { WithButtonAsChild, WithFieldsAndLabelsAndPlaceholders, WithSubmitButtonText } from '../stories/form/Form.stories';
 // import { Default as DefaultSelect } from '../stories/fields/Select.stories';
 // import { Default as DefaultRadio } from '../stories/fields/Radio.stories';
@@ -99,7 +100,7 @@ describe('Render Form testing with Field.Input', () => {
     //     expect(formProps.onSubmitHandler).toHaveBeenLastCalledWith(expectedValues);
     // });
 
-    test('It should show Alerts based on onValidationHandler errors', () => {
+    it('Should show Alerts based on onValidationHandler errors', () => {
         const { formProps, error1Message, error2Message } = getFormTestProps();
         render(<Form {...formProps} />);
 
@@ -112,6 +113,73 @@ describe('Render Form testing with Field.Input', () => {
         expect(formProps.onSubmitHandler).not.toHaveBeenCalled();
         expect(screen.getByText(error1Message)).toBeInTheDocument()
         expect(screen.getByText(error2Message)).toBeInTheDocument()
+    });
+
+    it('Should not call onSubmitHandler from the button with type=button', () => {
+        const firstChildProps: InputFieldProps = {
+            type: 'text',
+            name: 'firstName',
+            value: ''
+        }
+    
+        const child1 = <Field.Input {...firstChildProps} />
+        const mockedClick = jest.fn()
+        const button1 = <Button type="button" onClick={mockedClick}>Default</Button>
+        const button2 = <Button>Submit</Button>
+    
+        const formProps = {
+            initialValues: { firstName: 'John' },
+            onSubmitHandler: jest.fn(),
+            children: [child1, button1, button2],
+        }
+
+        render(<Form {...formProps} />)
+
+        const firstButton = screen.getByText('Default')
+        const secondButton = screen.getByText('Submit')
+
+        // WHEN
+        fireEvent.click(firstButton)
+
+        // THEN
+        expect(formProps.onSubmitHandler).not.toHaveBeenCalled()
+        expect(mockedClick).toHaveBeenCalled()
+
+        // rerender(<Form {...formProps} />)
+
+        // WHEN
+        fireEvent.click(secondButton)
+
+        // THEN
+        expect(formProps.onSubmitHandler).toHaveBeenCalled()
+        expect(mockedClick).toHaveBeenCalledTimes(1)
+    });
+
+    it('Should call onSubmitHandler from the button passed as child', () => {
+        const firstChildProps: InputFieldProps = {
+            type: 'text',
+            name: 'firstName',
+            value: ''
+        }
+    
+        const child1 = <Field.Input {...firstChildProps} />
+        const button2 = <Button>Submit</Button>
+    
+        const formProps = {
+            initialValues: { firstName: 'John' },
+            onSubmitHandler: jest.fn(),
+            children: [child1, button2],
+        }
+
+        render(<Form {...formProps} />)
+
+        const firstButton = screen.getByText('Submit')
+
+        // WHEN
+        fireEvent.click(firstButton)
+
+        // THEN
+        expect(formProps.onSubmitHandler).toHaveBeenCalled()
     });
 
     // test('It should call onValidationHandler after clicking on submit if it was passed as props', () => {

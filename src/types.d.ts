@@ -58,7 +58,9 @@ type InputFieldProps = {
 
 type ButtonProps = StyleProps & {
     text?: string,
-    children?: Array<React.ReactNode>
+    children?: React.ReactNode,
+    type?: 'button' | 'submit' | 'reset',
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 };
 
 type AlertProps = {

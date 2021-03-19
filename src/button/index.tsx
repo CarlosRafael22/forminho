@@ -1,11 +1,11 @@
 import React, { CSSProperties } from 'react';
 import { getStylingProps } from '../utils/styling'
 
-const Button = ({text = 'Submit', style = {}, children, css, className}: ButtonProps) => {
+const Button = ({text = 'Submit', style = {}, children, css, className, type = 'submit', onClick}: ButtonProps) => {
     const styleProps = getStylingProps(defaultStyle, { style, css, className })
 
     return (
-        <button {...styleProps}>{children ? children : text}</button>
+        <button {...{...styleProps, onClick, type}}>{children ? children : text}</button>
     )
 }
 

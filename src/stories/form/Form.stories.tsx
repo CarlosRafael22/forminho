@@ -3,7 +3,7 @@ import { Story, Meta } from '@storybook/react';
 import Form from '../../form';
 import { WithPlaceholder, WithLabel, WithLabelAndPlaceholder } from '../fields/Input.stories';
 import Field from '../../fields';
-import { Custom as CustomButton } from '../../button/Button.stories';
+import { Custom as CustomButton } from '../../button/stories';
 import Button from '../../button';
 import { WithLabel as WithLabelSelect } from '../fields/Select.stories';
 import { Default as DefaultRadio } from '../fields/Radio.stories';

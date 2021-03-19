@@ -24,7 +24,7 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
 }, ref) => {
     const formRef = useRef<HTMLFormElement>(null);
     const context = useContext(FormContext) as FormContextType;
-    const [error, setError] = useState<string | undefined>(undefined);
+    const [errors, setErrors] = useState<string[] | undefined>(undefined);
 
     context.formRef = formRef;
     context.initialValues = initialValues || {};
@@ -49,14 +49,17 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
     };
 
     const validatedValues = (values: ObjectType) => {
-        try {
-            if (onValidationHandler) onValidationHandler(values);
-            setError(undefined);
-            return true;
-        } catch (error) {
-            setError(error.message);
-            return false;
+        if (onValidationHandler) {
+            const expectedErrors = onValidationHandler(values)
+            if (expectedErrors && expectedErrors.length > 0) {
+                setErrors(expectedErrors)
+                return false
+            } else {
+                setErrors(undefined)
+                return true
+            }
         }
+        return true
     }
 
     const onSubmit = (event: React.FormEvent) => {
@@ -65,7 +68,7 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
         // onSubmitHandler(formRefValues);
         // If formRefValues equals to initialValues then the form hasnt been filled and we should call submit
         if (!checkHasFilledValues(formRefValues, initialValues)) {
-            setError('Please fill up the form.')
+            setErrors(['Please fill up the form.'])
             return
         }
 
@@ -86,11 +89,12 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
     });
 
     const styleProps = getStylingProps({}, { style, css, className })
- 
     return (
         <FormContext.Provider value={context}>
             <form ref={formRef} onSubmit={onSubmit} onChange={onChange} {...styleProps}>
-                {error && <Alert text={error as unknown as string} />}
+                {(errors && errors.length > 0) && (
+                    errors.map(error => <Alert text={error} />)
+                )}
                 {children}
                 {willRenderDefaultButton && (submitButtonText ? <Button text={submitButtonText} /> : <Button />)}
             </form>

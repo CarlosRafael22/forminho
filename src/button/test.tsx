@@ -1,7 +1,7 @@
 import React from 'react'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { Default as DefaultButton, Custom as CustomButton, WithCssAndSelector } from './Button.stories'
+import { Default as DefaultButton, Custom as CustomButton, WithCssAndSelector } from './stories'
 
 
 describe('Render Button', () => {

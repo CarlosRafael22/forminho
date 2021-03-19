@@ -73,7 +73,7 @@ const attachCssRulesToDocument = (styleSheetRules: Array<string>) => {
         try {
             styleSheetRules.forEach(rule => style.sheet?.insertRule(rule))
         } catch (error) {
-            console.log('FAILED TO PARSE RULE: ', error.name)
+            // console.log('FAILED TO PARSE RULE: ', error.name)
         }
     }
 }

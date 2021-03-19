@@ -39,12 +39,12 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
 
         const formRefValues = getValuesFromFormRef(context.formRef, context.initialValues);
         // console.log(formRefValues)
-        console.log('Updating context.currentValues')
+        // console.log('Updating context.currentValues')
         context.currentValues = formRefValues;
-        console.log(context)
+        // console.log(context)
 
         if(onLiveErrorFeedback) onLiveErrorFeedback(formRefValues, context);
-        console.log('CALLING ONCHANGE FROM THE SIGNUP')
+        // console.log('CALLING ONCHANGE FROM THE SIGNUP')
         if(onChangeHandler) onChangeHandler(event, formRefValues);
     };
 

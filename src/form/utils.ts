@@ -6,10 +6,10 @@ export const handleFieldError = (contextValue: FormContextType) => {
     const setFieldError = (fieldName: string, errorMessage: string) => {
         // Check whether the field is on focus
         // If its not on focus then we dont set the errorText otherwise all fields could show errors before they were interacted with
-        console.log('CONTEXT NO HANDLE FIELD', contextValue)
+        // console.log('CONTEXT NO HANDLE FIELD', contextValue)
         const { current: currentElement } = contextValue.fieldRefs[fieldName];
         const { current: currentErrorSpan } = contextValue.errorRefs[fieldName];
-        console.log('CURRENT FIELD ', currentElement)
+        // console.log('CURRENT FIELD ', currentElement)
         // console.log('IS ON FOCUS? ', onfocus)
         if (document.activeElement === currentElement) {
             if (currentErrorSpan) {
@@ -56,7 +56,6 @@ export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormEle
                 }
             } else if (currentRef.type === 'checkbox') {
                 // If its not a node list of radios or checkboxes it can be an isolated checkbox
-                console.log('CAIU CHECKBOX ISOLADO ', currentRef.checked, currentRef.value)
                 valuesObj[key] = currentRef.checked;
             } else {
                 valuesObj[key] = currentRef.value;

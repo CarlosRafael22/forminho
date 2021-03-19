@@ -49,7 +49,7 @@ const Field = ({
 
     const defaultProps = {
         name,
-        value, // Used for Radio fields and Checkbox fields when there are many with the same name
+        value: (type === 'radio') || (type === 'checkbox') ? value : undefined, // Used for Radio fields and Checkbox fields when there are many with the same name
         placeholder,
         // style: {...defaultInputStyle, ...style},
         onChange: onChangeHandler,

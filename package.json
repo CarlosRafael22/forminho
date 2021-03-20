@@ -1,7 +1,7 @@
 {
   "name": "forminho",
-  "version": "0.0.1",
-  "description": "Helps creating simple forms",
+  "version": "0.1.0",
+  "description": "Create simple forms in a easier way without unecessary re-renders",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "jsnext:main": "build/index.es.js",
@@ -14,7 +14,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "author": "Carlos Rafael Leitão",
+  "author": "Carlos Rafael de Oliveira do Amaral Leitão",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.12.10",

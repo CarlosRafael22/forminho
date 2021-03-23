@@ -16,10 +16,12 @@ type FormProps = StyleProps & {
     children?: Array<React.ReactNode>,
     onChangeHandler?: (event: React.ChangeEvent<HTMLFormElement>, currentValues: ObjectType) => void,
     // onLiveErrorFeedback?: (currentValues: ObjectType, context: FormContextType) => void,
-    onLiveErrorFeedback?: Function,
+    onLiveErrorFeedback?: (fn: fieldValidationFunction) => void,
     onValidationHandler?: (values: ObjectType) => string[] | undefined,
     submitButtonText?: string
 }
+
+type fieldValidationFunction = (fieldName: string) =>  FieldValidatorInterface  
 
 type GenericInputChangeEvent = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>;
 
@@ -123,4 +125,15 @@ type FormContextType = {
     errorRefs: RefsObject<HTMLSpanElement | null>,
     initialValues: ObjectType,
     currentValues: ObjectType
+}
+
+type setFieldErrorFunction = (fieldName: string, errorMessage: string) => void
+type clearFieldErrorFunction = (fieldName: string) => void
+
+interface FieldValidatorInterface {
+    field: any
+    fieldName: string
+    setFieldError: setFieldErrorFunction,
+    clearFieldError: clearFieldErrorFunction,
+    errorHasBeenSet: boolean
 }

@@ -32,16 +32,33 @@ export const handleFieldError = (contextValue: FormContextType) => {
 
 // onLiveErrorFeedbackObject
 // {
-//     firstName: validate().min(6, 'Must have more than 6 caracters').max(20, 'Must have 20 at most'),
+//     firstName: validate('firstName').min(6, 'Must have more than 6 caracters').max(20, 'Must have 20 at most'),
 //     lastName: validate().min(6, 'Must have more than 6 caracters')
 // }
-export const validateFields = (onLiveErrorFeedbackObject: any, formRefValues: any, context: FormContextType) => {
-    const { setFieldError, clearFieldError } = handleFieldError(context)
-    const errorFeedbackKeys = Object.keys(onLiveErrorFeedbackObject)
-    for (const key of errorFeedbackKeys) {
-        fieldValidator(formRefValues[key], key, setFieldError, clearFieldError)
-    }
-}
+// return [
+//     validate('firstName').min(6, 'Must have more than 6 caracters').max(20, 'Must have 20 at most'),
+//     validate('lastName').min(6, 'Must have more than 6 caracters').max(20, 'Must have 20 at most')
+// ]
+// export const validateFields = (onLiveErrorFeedbackObject: any, formRefValues: any, context: FormContextType) => {
+//     const { setFieldError, clearFieldError } = handleFieldError(context)
+//     const errorFeedbackKeys = Object.keys(onLiveErrorFeedbackObject)
+//     for (const key of errorFeedbackKeys) {
+//         new fieldValidator(formRefValues[key], key, setFieldError, clearFieldError)
+//     }
+// }
+// const validate = (fieldName: string) => new fieldValidator('', fieldName, mockedSet, mockedClear)
+// if(onLiveErrorFeedback) {
+//     const validationsArray = onLiveErrorFeedback(validate)
+//     validationsArray.forEach(validation: => validation())
+// }
+// export const validateFields = (validationsArray: any[], formRefValues: any, context: FormContextType) => {
+//     const { setFieldError, clearFieldError } = handleFieldError(context)
+//     // const errorFeedbackKeys = Object.keys(onLiveErrorFeedbackObject)
+//     validationsArray.forEach(validation => validation())
+//     for (const key of errorFeedbackKeys) {
+//         new fieldValidator(formRefValues[key], key, setFieldError, clearFieldError)
+//     }
+// }
 
 // const validate = () => fieldValidator(formRefValues[key], key, setFieldError, clearFieldError)
 // if(onLiveErrorFeedback) onLiveErrorFeedback(formRefValues, context);
@@ -56,47 +73,161 @@ export const validateFields = (onLiveErrorFeedbackObject: any, formRefValues: an
 // const validate = () => ()
 
 // errorHasBeenSet has true as default so that its not called in the first rule call in the chain, otherwise it would call clearFieldError in the first rule
-export const fieldValidator = (field: any, fieldName: string, setFieldError: Function, clearFieldError: Function, errorHasBeenSet = true) => ({
-    min: (limit: number, errorMessage: string) => {
-        let errorWasSet = false
-        if (field.length < limit) {
-            errorWasSet = true
-            setFieldError(fieldName, errorMessage)
-        } else {
-            // If an error has been set for the previous rule them we dont clear
-            // We only clear the error on the last rule if any error hasnt been set
-            console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
-            if (!errorHasBeenSet) clearFieldError(fieldName)
-        }
-        return fieldValidator(field, fieldName, setFieldError, clearFieldError, errorWasSet)
-    },
-    max: (limit: number, errorMessage: string) => {
-        let errorWasSet = false
-        if (field.length > limit) {
-            errorWasSet = true
-            setFieldError(fieldName, errorMessage)
-        } else {
-            // If an error has been set for the previous rule them we dont clear
-            // We only clear the error on the last rule if any error hasnt been set
-            console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
-            if (!errorHasBeenSet) clearFieldError(fieldName)
-        }
-        return fieldValidator(field, fieldName, setFieldError, clearFieldError, errorWasSet)
-    },
-    required: (errorMessage?: string) => {
-        let errorWasSet = false
-        if (!field || field.length == 0) {
-            errorWasSet = true
-            setFieldError(fieldName, errorMessage ? errorMessage : `${fieldName} should be provided`)
-        } else {
-            // If an error has been set for the previous rule them we dont clear
-            // We only clear the error on the last rule if any error hasnt been set
-            console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
-            if (!errorHasBeenSet) clearFieldError(fieldName)
-        }
-        return fieldValidator(field, fieldName, setFieldError, clearFieldError, errorWasSet)
+// export const fieldValidator = (field: any, fieldName: string, setFieldError: Function, clearFieldError: Function, errorHasBeenSet = true) => ({
+//     min: (limit: number, errorMessage: string) => {
+//         let errorWasSet = false
+//         if (field.length < limit) {
+//             errorWasSet = true
+//             setFieldError(fieldName, errorMessage)
+//         } else {
+//             // If an error has been set for the previous rule them we dont clear
+//             // We only clear the error on the last rule if any error hasnt been set
+//             console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
+//             if (!errorHasBeenSet) clearFieldError(fieldName)
+//         }
+//         return fieldValidator(field, fieldName, setFieldError, clearFieldError, errorWasSet)
+//     },
+//     max: (limit: number, errorMessage: string) => {
+//         let errorWasSet = false
+//         if (field.length > limit) {
+//             errorWasSet = true
+//             setFieldError(fieldName, errorMessage)
+//         } else {
+//             // If an error has been set for the previous rule them we dont clear
+//             // We only clear the error on the last rule if any error hasnt been set
+//             console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
+//             if (!errorHasBeenSet) clearFieldError(fieldName)
+//         }
+//         return fieldValidator(field, fieldName, setFieldError, clearFieldError, errorWasSet)
+//     },
+//     required: (errorMessage?: string) => {
+//         let errorWasSet = false
+//         if (!field || field.length == 0) {
+//             errorWasSet = true
+//             setFieldError(fieldName, errorMessage ? errorMessage : `${fieldName} should be provided`)
+//         } else {
+//             // If an error has been set for the previous rule them we dont clear
+//             // We only clear the error on the last rule if any error hasnt been set
+//             console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
+//             if (!errorHasBeenSet) clearFieldError(fieldName)
+//         }
+//         return fieldValidator(field, fieldName, setFieldError, clearFieldError, errorWasSet)
+//     }
+// })
+
+// export function fieldValidator (field: any, fieldName: string, setFieldError: Function, clearFieldError: Function) {
+
+//     let errorWasSet = false
+//     let errorHasBeenSet = false
+//     console.log('O THIS INICIAL: ', this)
+    
+//     return {
+//         min: function (limit: number, errorMessage: string) {
+//             if (field.length < limit) {
+//                 errorHasBeenSet = true
+//                 setFieldError(fieldName, errorMessage)
+//             } else {
+//                 // If an error has been set for the previous rule them we dont clear
+//                 // We only clear the error on the last rule if any error hasnt been set
+//                 console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
+//                 if (!errorHasBeenSet) clearFieldError(fieldName)
+//             }
+//             console.log('O THIS: ', this)
+//             return this
+//         },
+//         max: function (limit: number, errorMessage: string) {
+//             if (field.length > limit) {
+//                 errorHasBeenSet = true
+//                 setFieldError(fieldName, errorMessage)
+//             } else {
+//                 // If an error has been set for the previous rule them we dont clear
+//                 // We only clear the error on the last rule if any error hasnt been set
+//                 console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
+//                 if (!errorHasBeenSet) clearFieldError(fieldName)
+//             }
+//             console.log('O THIS: ', this)
+//             return this
+//         },
+//         required: function (errorMessage?: string) {
+//             if (!field || field.length == 0) {
+//                 errorHasBeenSet = true
+//                 setFieldError(fieldName, errorMessage ? errorMessage : `${fieldName} should be provided`)
+//             } else {
+//                 // If an error has been set for the previous rule them we dont clear
+//                 // We only clear the error on the last rule if any error hasnt been set
+//                 console.log('ERRRO: ', errorWasSet, errorHasBeenSet)
+//                 if (!errorHasBeenSet) clearFieldError(fieldName)
+//             }
+//             console.log('O THIS: ', this)
+//             return this
+//         }
+//     }
+// }
+
+export class fieldValidator {
+    field: any
+    fieldName: string
+    setFieldError: Function
+    clearFieldError: Function
+    errorHasBeenSet = false
+
+    constructor (field: any, fieldName: string, setFieldError: Function, clearFieldError: Function) {
+        this.field = field
+        this.fieldName = fieldName
+        this.setFieldError = setFieldError
+        this.clearFieldError = clearFieldError
+        console.log('NO CONSTRUCTOR:  ', field, fieldName)
     }
-})
+
+    // let errorWasSet = false
+    // let errorHasBeenSet = false
+    // console.log('O THIS INICIAL: ', this)
+    
+    min (limit: number, errorMessage: string) {
+        console.log('NO MIN:  ', this.field, this.fieldName)
+        if (this.field.length < limit) {
+            this.errorHasBeenSet = true
+            this.setFieldError(this.fieldName, errorMessage)
+        } else {
+            // If an error has been set for the previous rule them we dont clear
+            // We only clear the error on the last rule if any error hasnt been set
+            console.log('ERRRO: ', this.errorHasBeenSet)
+            if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
+        }
+        // console.log('O THIS: ', this)
+        return this
+    }
+
+    max (limit: number, errorMessage: string) {
+        console.log('NO MAX:  ', this.field, this.fieldName)
+        if (this.field.length > limit) {
+            this.errorHasBeenSet = true
+            this.setFieldError(this.fieldName, errorMessage)
+        } else {
+            // If an error has been set for the previous rule them we dont clear
+            // We only clear the error on the last rule if any error hasnt been set
+            console.log('ERRRO: ', this.errorHasBeenSet)
+            if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
+        }
+        // console.log('O THIS: ', this)
+        return this
+    }
+
+    required (errorMessage?: string) {
+        console.log('NO REQUIRED:  ', this.field, this.fieldName)
+        if (!this.field || this.field.length == 0) {
+            this.errorHasBeenSet = true
+            this.setFieldError(this.fieldName, errorMessage ? errorMessage : `${this.fieldName} should be provided`)
+        } else {
+            // If an error has been set for the previous rule them we dont clear
+            // We only clear the error on the last rule if any error hasnt been set
+            console.log('ERRRO: ', this.errorHasBeenSet)
+            if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
+        }
+        // console.log('O THIS: ', this)
+        return this
+    }
+}
 
 export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormElement | null>, initialValues: ObjectType): ObjectType => {
     const initialValuesKeys = getRefKeys(initialValues);

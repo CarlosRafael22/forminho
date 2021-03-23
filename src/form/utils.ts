@@ -51,26 +51,32 @@ export class FieldValidator implements FieldValidatorInterface {
         } else {
             // If an error has been set for the previous rule them we dont clear
             // We only clear the error on the last rule if any error hasnt been set
-            console.log('ERRRO: ', this.errorHasBeenSet)
             if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
         }
     }
     
     min (limit: number, errorMessage: string) {
-        console.log('NO MIN:  ', this.field, this.fieldName)
         this.handleSetErrorLogic(this.field.length < limit, errorMessage)
         return this
     }
 
     max (limit: number, errorMessage: string) {
-        console.log('NO MAX:  ', this.field, this.fieldName)
         this.handleSetErrorLogic(this.field.length > limit, errorMessage)
         return this
     }
 
     required (errorMessage?: string) {
-        console.log('NO REQUIRED:  ', this.field, this.fieldName)
         this.handleSetErrorLogic(!this.field || this.field.length == 0, errorMessage ? errorMessage : `${this.fieldName} should be provided`)
+        return this
+    }
+
+    lowercase (errorMessage?: string) {
+        this.handleSetErrorLogic(this.field != this.field.toLowerCase(), errorMessage ? errorMessage : `${this.fieldName} should be lower case`)
+        return this
+    }
+
+    uppercase (errorMessage?: string) {
+        this.handleSetErrorLogic(this.field != this.field.toUpperCase(), errorMessage ? errorMessage : `${this.fieldName} should be upper case`)
         return this
     }
 }

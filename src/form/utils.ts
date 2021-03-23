@@ -176,12 +176,10 @@ export class FieldValidator implements FieldValidatorInterface {
         this.fieldName = fieldName
         this.setFieldError = setFieldError
         this.clearFieldError = clearFieldError
-        console.log('NO CONSTRUCTOR:  ', field, fieldName)
     }
-    
-    min (limit: number, errorMessage: string) {
-        console.log('NO MIN:  ', this.field, this.fieldName)
-        if (this.field.length < limit) {
+
+    handleSetErrorLogic = (condition: any, errorMessage: any) => {
+        if (condition) {
             this.errorHasBeenSet = true
             this.setFieldError(this.fieldName, errorMessage)
         } else {
@@ -190,37 +188,23 @@ export class FieldValidator implements FieldValidatorInterface {
             console.log('ERRRO: ', this.errorHasBeenSet)
             if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
         }
-        // console.log('O THIS: ', this)
+    }
+    
+    min (limit: number, errorMessage: string) {
+        console.log('NO MIN:  ', this.field, this.fieldName)
+        this.handleSetErrorLogic(this.field.length < limit, errorMessage)
         return this
     }
 
     max (limit: number, errorMessage: string) {
         console.log('NO MAX:  ', this.field, this.fieldName)
-        if (this.field.length > limit) {
-            this.errorHasBeenSet = true
-            this.setFieldError(this.fieldName, errorMessage)
-        } else {
-            // If an error has been set for the previous rule them we dont clear
-            // We only clear the error on the last rule if any error hasnt been set
-            console.log('ERRRO: ', this.errorHasBeenSet)
-            if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
-        }
-        // console.log('O THIS: ', this)
+        this.handleSetErrorLogic(this.field.length > limit, errorMessage)
         return this
     }
 
     required (errorMessage?: string) {
         console.log('NO REQUIRED:  ', this.field, this.fieldName)
-        if (!this.field || this.field.length == 0) {
-            this.errorHasBeenSet = true
-            this.setFieldError(this.fieldName, errorMessage ? errorMessage : `${this.fieldName} should be provided`)
-        } else {
-            // If an error has been set for the previous rule them we dont clear
-            // We only clear the error on the last rule if any error hasnt been set
-            console.log('ERRRO: ', this.errorHasBeenSet)
-            if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
-        }
-        // console.log('O THIS: ', this)
+        this.handleSetErrorLogic(!this.field || this.field.length == 0, errorMessage ? errorMessage : `${this.fieldName} should be provided`)
         return this
     }
 }

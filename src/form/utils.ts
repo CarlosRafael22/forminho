@@ -66,17 +66,17 @@ export class FieldValidator implements FieldValidatorInterface {
     }
 
     required (errorMessage?: string) {
-        this.handleSetErrorLogic(!this.field || this.field.length == 0, errorMessage ? errorMessage : `${this.fieldName} should be provided`)
+        this.handleSetErrorLogic(!this.field || this.field.length == 0, errorMessage ? errorMessage : `Field should be provided`)
         return this
     }
 
     lowercase (errorMessage?: string) {
-        this.handleSetErrorLogic(this.field != this.field.toLowerCase(), errorMessage ? errorMessage : `${this.fieldName} should be lower case`)
+        this.handleSetErrorLogic(this.field != this.field.toLowerCase(), errorMessage ? errorMessage : `Field should be lower case`)
         return this
     }
 
     uppercase (errorMessage?: string) {
-        this.handleSetErrorLogic(this.field != this.field.toUpperCase(), errorMessage ? errorMessage : `${this.fieldName} should be upper case`)
+        this.handleSetErrorLogic(this.field != this.field.toUpperCase(), errorMessage ? errorMessage : `Field should be upper case`)
         return this
     }
 }

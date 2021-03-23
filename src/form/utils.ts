@@ -3,7 +3,7 @@ import { FormContextType, ObjectType } from '../Forminho';
 export const getRefKeys = (refs: {[key:string]: any}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
 
 export const handleFieldError = (contextValue: FormContextType) => {
-    const setFieldError = (fieldName: string, errorMessage: string) => {
+    const setFieldError: setFieldErrorFunction = (fieldName: string, errorMessage: string) => {
         // Check whether the field is on focus
         // If its not on focus then we dont set the errorText otherwise all fields could show errors before they were interacted with
         // console.log('CONTEXT NO HANDLE FIELD', contextValue)
@@ -17,7 +17,7 @@ export const handleFieldError = (contextValue: FormContextType) => {
             }
         }
     }
-    const clearFieldError = (fieldName: string) => {
+    const clearFieldError: clearFieldErrorFunction = (fieldName: string) => {
         if (contextValue.errorRefs[fieldName].current) {
             const spanCurrent = contextValue.errorRefs[fieldName].current as HTMLSpanElement;
             spanCurrent.innerText = '';
@@ -164,24 +164,20 @@ export const handleFieldError = (contextValue: FormContextType) => {
 //     }
 // }
 
-export class FieldValidator {
+export class FieldValidator implements FieldValidatorInterface {
     field: any
     fieldName: string
-    setFieldError: Function
-    clearFieldError: Function
+    setFieldError: setFieldErrorFunction
+    clearFieldError: clearFieldErrorFunction
     errorHasBeenSet = false
 
-    constructor (field: any, fieldName: string, setFieldError: Function, clearFieldError: Function) {
+    constructor (field: any, fieldName: string, setFieldError: setFieldErrorFunction, clearFieldError: clearFieldErrorFunction) {
         this.field = field
         this.fieldName = fieldName
         this.setFieldError = setFieldError
         this.clearFieldError = clearFieldError
         console.log('NO CONSTRUCTOR:  ', field, fieldName)
     }
-
-    // let errorWasSet = false
-    // let errorHasBeenSet = false
-    // console.log('O THIS INICIAL: ', this)
     
     min (limit: number, errorMessage: string) {
         console.log('NO MIN:  ', this.field, this.fieldName)

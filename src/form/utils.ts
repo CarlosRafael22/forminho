@@ -164,7 +164,7 @@ export const handleFieldError = (contextValue: FormContextType) => {
 //     }
 // }
 
-export class fieldValidator {
+export class FieldValidator {
     field: any
     fieldName: string
     setFieldError: Function

@@ -1,6 +1,6 @@
 // import { getRefKeys } from '.';
-import { getUpdatedLiveValuesFromRefs, checkHasFilledValues, fieldValidator } from './utils'
-// import { fieldValidator } from './utils'
+import { getUpdatedLiveValuesFromRefs, checkHasFilledValues, FieldValidator } from './utils'
+// import { FieldValidator } from './utils'
 
 describe('Test getUpdatedLiveValues', () => {
     it('should return correct values', () => {
@@ -32,12 +32,12 @@ describe('Test checkHasFilledValues', () => {
         
 })
 
-describe('Test fieldValidator', () => {
+describe('Test FieldValidator', () => {
     it('should not pass on min()', () => {
         const mockedSet = jest.fn()
         const mockedClear = jest.fn()
 
-        new fieldValidator('test', 'firstName', mockedSet, mockedClear).min(6, 'Should have more than 6 letters').max(10, 'Should have less than 6 letters')
+        new FieldValidator('test', 'firstName', mockedSet, mockedClear).min(6, 'Should have more than 6 letters').max(10, 'Should have less than 6 letters')
         expect(mockedSet).toHaveBeenCalledWith('firstName', 'Should have more than 6 letters')
         expect(mockedClear).not.toHaveBeenCalled()
     })
@@ -46,7 +46,7 @@ describe('Test fieldValidator', () => {
         const mockedSet = jest.fn()
         const mockedClear = jest.fn()
 
-        new fieldValidator('testinho name', 'firstName', mockedSet, mockedClear).min(6, 'Should have more than 6 letters').max(10, 'Should have less than 10 letters')
+        new FieldValidator('testinho name', 'firstName', mockedSet, mockedClear).min(6, 'Should have more than 6 letters').max(10, 'Should have less than 10 letters')
         expect(mockedSet).toHaveBeenCalledWith('firstName', 'Should have less than 10 letters')
         // expect(mockedClear).not.toHaveBeenCalled()
     })
@@ -55,7 +55,7 @@ describe('Test fieldValidator', () => {
         const mockedSet = jest.fn()
         const mockedClear = jest.fn()
 
-        new fieldValidator('testi', 'firstName', mockedSet, mockedClear).max(10, 'Should have less than 10 letters').min(6, 'Should have more than 6 letters')
+        new FieldValidator('testi', 'firstName', mockedSet, mockedClear).max(10, 'Should have less than 10 letters').min(6, 'Should have more than 6 letters')
         expect(mockedSet).toHaveBeenCalledWith('firstName', 'Should have more than 6 letters')
         // expect(mockedClear).not.toHaveBeenCalled()
     })
@@ -64,8 +64,8 @@ describe('Test fieldValidator', () => {
         const mockedSet = jest.fn()
         const mockedClear = jest.fn()
 
-        // const validate: any = () => (fieldName: string) => new fieldValidator('', fieldName, mockedSet, mockedClear)
-        const validator: any = (fieldName: string) => new fieldValidator('', fieldName, mockedSet, mockedClear)
+        // const validate: any = () => (fieldName: string) => new FieldValidator('', fieldName, mockedSet, mockedClear)
+        const validator: any = (fieldName: string) => new FieldValidator('', fieldName, mockedSet, mockedClear)
 
         const test = [validator('firstName').required().min(6, 'Should have more than 6 letters').max(10, 'Should have less than 10 letters')]
 

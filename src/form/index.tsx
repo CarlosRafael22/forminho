@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useState, useImperativeHandle } from "react";
 import { FormContext, FormContextType } from '../Forminho';
-import { getValuesFromFormRef, checkHasFilledValues, fieldValidator, handleFieldError } from './utils';
+import { getValuesFromFormRef, checkHasFilledValues, FieldValidator, handleFieldError } from './utils';
 import { getStylingProps } from '../utils/styling'
 import Button from '../button';
 import Alert from '../alert';
@@ -44,7 +44,7 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
         context.currentValues = formRefValues;
         // console.log(context)
 
-        const validate = (fieldName: string) => new fieldValidator(formRefValues[fieldName], fieldName, setFieldError, clearFieldError)
+        const validate = (fieldName: string) => new FieldValidator(formRefValues[fieldName], fieldName, setFieldError, clearFieldError)
         console.log('O VALIDAAAATEEEE: ', validate, formRefValues)
         if(onLiveErrorFeedback) onLiveErrorFeedback(validate);
         console.log('CALLING ONCHANGE FROM THE SIGNUP')

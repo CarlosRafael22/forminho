@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useState, useImperativeHandle } from "react";
 import { FormContext, FormContextType } from '../Forminho';
-import { getValuesFromFormRef, checkHasFilledValues } from './utils';
+import { getValuesFromFormRef, checkHasFilledValues, FieldValidator, handleFieldError } from './utils';
 import { getStylingProps } from '../utils/styling'
 import Button from '../button';
 import Alert from '../alert';
@@ -25,6 +25,7 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
     const formRef = useRef<HTMLFormElement>(null);
     const context = useContext(FormContext) as FormContextType;
     const [errors, setErrors] = useState<string[] | undefined>(undefined);
+    const { setFieldError, clearFieldError } = handleFieldError(context)
 
     context.formRef = formRef;
     context.initialValues = initialValues || {};
@@ -43,8 +44,10 @@ const Form = React.forwardRef<IncrementedRef, FormProps>(({
         context.currentValues = formRefValues;
         // console.log(context)
 
-        if(onLiveErrorFeedback) onLiveErrorFeedback(formRefValues, context);
-        // console.log('CALLING ONCHANGE FROM THE SIGNUP')
+        const validateField: fieldValidationFunction = (fieldName: string) => new FieldValidator(formRefValues[fieldName], fieldName, setFieldError, clearFieldError)
+        console.log('O VALIDAAAATEEEE: ', validateField, formRefValues)
+        if(onLiveErrorFeedback) onLiveErrorFeedback(validateField);
+        console.log('CALLING ONCHANGE FROM THE SIGNUP')
         if(onChangeHandler) onChangeHandler(event, formRefValues);
     };
 

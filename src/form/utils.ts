@@ -3,7 +3,7 @@ import { FormContextType, ObjectType } from '../Forminho';
 export const getRefKeys = (refs: {[key:string]: any}): Array<string> => Object.keys(refs).filter(key => key !== 'undefined');
 
 export const handleFieldError = (contextValue: FormContextType) => {
-    const setFieldError = (fieldName: string, errorMessage: string) => {
+    const setFieldError: setFieldErrorFunction = (fieldName: string, errorMessage: string) => {
         // Check whether the field is on focus
         // If its not on focus then we dont set the errorText otherwise all fields could show errors before they were interacted with
         // console.log('CONTEXT NO HANDLE FIELD', contextValue)
@@ -17,7 +17,7 @@ export const handleFieldError = (contextValue: FormContextType) => {
             }
         }
     }
-    const clearFieldError = (fieldName: string) => {
+    const clearFieldError: clearFieldErrorFunction = (fieldName: string) => {
         if (contextValue.errorRefs[fieldName].current) {
             const spanCurrent = contextValue.errorRefs[fieldName].current as HTMLSpanElement;
             spanCurrent.innerText = '';
@@ -29,6 +29,57 @@ export const handleFieldError = (contextValue: FormContextType) => {
         clearFieldError
     }
 };
+
+export class FieldValidator implements FieldValidatorInterface {
+    field: any
+    fieldName: string
+    setFieldError: setFieldErrorFunction
+    clearFieldError: clearFieldErrorFunction
+    errorHasBeenSet = false
+
+    constructor (field: any, fieldName: string, setFieldError: setFieldErrorFunction, clearFieldError: clearFieldErrorFunction) {
+        this.field = field
+        this.fieldName = fieldName
+        this.setFieldError = setFieldError
+        this.clearFieldError = clearFieldError
+    }
+
+    handleSetErrorLogic = (condition: any, errorMessage: any) => {
+        if (condition) {
+            this.errorHasBeenSet = true
+            this.setFieldError(this.fieldName, errorMessage)
+        } else {
+            // If an error has been set for the previous rule them we dont clear
+            // We only clear the error on the last rule if any error hasnt been set
+            if (!this.errorHasBeenSet) this.clearFieldError(this.fieldName)
+        }
+    }
+    
+    min (limit: number, errorMessage: string) {
+        this.handleSetErrorLogic(this.field.length < limit, errorMessage)
+        return this
+    }
+
+    max (limit: number, errorMessage: string) {
+        this.handleSetErrorLogic(this.field.length > limit, errorMessage)
+        return this
+    }
+
+    required (errorMessage?: string) {
+        this.handleSetErrorLogic(!this.field || this.field.length == 0, errorMessage ? errorMessage : `Field should be provided`)
+        return this
+    }
+
+    lowercase (errorMessage?: string) {
+        this.handleSetErrorLogic(this.field != this.field.toLowerCase(), errorMessage ? errorMessage : `Field should be lower case`)
+        return this
+    }
+
+    uppercase (errorMessage?: string) {
+        this.handleSetErrorLogic(this.field != this.field.toUpperCase(), errorMessage ? errorMessage : `Field should be upper case`)
+        return this
+    }
+}
 
 export const getValuesFromFormRef = (formRef: React.MutableRefObject<HTMLFormElement | null>, initialValues: ObjectType): ObjectType => {
     const initialValuesKeys = getRefKeys(initialValues);

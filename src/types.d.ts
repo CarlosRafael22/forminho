@@ -15,7 +15,8 @@ type FormProps = StyleProps & {
     initialValues: ObjectType,
     children?: Array<React.ReactNode>,
     onChangeHandler?: (event: React.ChangeEvent<HTMLFormElement>, currentValues: ObjectType) => void,
-    onLiveErrorFeedback?: (currentValues: ObjectType, context: FormContextType) => void,
+    // onLiveErrorFeedback?: (currentValues: ObjectType, context: FormContextType) => void,
+    onLiveErrorFeedback?: Function,
     onValidationHandler?: (values: ObjectType) => string[] | undefined,
     submitButtonText?: string
 }

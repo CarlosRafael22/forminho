@@ -2,6 +2,8 @@
 
 A library to help you create simple forms without having to build the state and error handling logic from scratch.
 
+🚧This is a work in progress. Props and methods may change during development until first production ready version 🚧
+
 ## Installation
 
 Since this library is currently a study project, the installation is manual.
@@ -82,9 +84,19 @@ Provides the context to handle the values of all the Fields, the error and field
 
 One important thing to notice is that this function should throw Error if the validation you are checking fails. The Error thrown will be caught by the function responsible to deal with errors in the Form component and then it will create an Alert on top of all the fields in the Form showing the error message. If there is no Error thrown then the validation was successful and the values will be passed to 'onSubmitHandler'.
 
-- onLiveErrorFeedback: (values: Object) => void
+- onLiveErrorFeedback: (validate: Function) => any[]
 
-**Optional function**. For when you want to have a live error feedback while the user is typing. Providing this prop, you can use the `setFieldError` and `clearFieldError` from the `handleFieldError` object to show error messages below the Field when the values that the user typed does not fullfil some logic you determine. This function receives the most recent values of the Fields for you to handle this live error feedbacks.
+**Optional function**. For when you want to have a live error feedback while the user is typing. Providing this prop, you can use the `validate` method in each field and chain some common used validations such as `min()`, `max()`, `required()`, `lowercase()` and `uppercase()` for strings to validate te fields and to show error messages below the Field when the values that the user typed does not fullfil them. Example use:
+
+```javascript
+
+  const onLiveErrorFeedback = (validate: Function) => {
+    return [
+      validate('firstName').uppercase().min(6, 'Must have more than 6 caracters').max(8, 'Must have 8 at most'),
+      validate('lastName').lowercase().min(6, 'Must have more than 6 caracters').max(10, 'Must have 10 at most')
+    ]
+  }
+```
 
 - onChangeHandler: (event: React.ChangeEvent<HTMLFormElement>, values: Object) => void
 
@@ -102,7 +114,7 @@ One important thing to notice is that this function should throw Error if the va
 
 **Optional**. It is a template string you pass to the component if you want to change its style in the CSS in JS way. You pass the template string just like you would be styling a component with `styled-components` or `emotion` library.
 
-```
+```javascript
   const formStyle = `
     padding: 1em;
     border-radius: 5px;
@@ -120,7 +132,7 @@ One important thing to notice is that this function should throw Error if the va
 
 **Optional**. You can also style the Field passing the className that matches a class in your css file.
 
-```
+```javascript
     import './style.css'
 
     <Form
@@ -163,7 +175,7 @@ The component to be used for any form field. It uses the dot notation for you to
 
 **Optional**. It is a template string you pass to the component if you want to change its style in the CSS in JS way. You pass the template string just like you would be styling a component with `styled-components` or `emotion` library.
 
-```
+```javascript
   const inputStyle = `
     padding: 1em;
     border-radius: 5px;
@@ -177,7 +189,7 @@ The component to be used for any form field. It uses the dot notation for you to
 
 **Optional**. You can also style the Field passing the className that matches a class in your css file.
 
-```
+```javascript
     import './style.css'
 
     <Field.Input name='email' type='text' placeholder='Email Address' className='form-field animation a3 workaround-w100' />
@@ -189,7 +201,7 @@ The component to be used for any form field. It uses the dot notation for you to
 
 This prop is only used when you need to have the value of one Field outside the Form.
 
-```
+```javascript
     const App = () => {
         const [liveFirstName, setLiveFirstName] = useState('');
         return (
@@ -316,21 +328,12 @@ const App = () => {
         }
     }
 
-    const onLiveErrorFeedback = (fieldValues, formContext) => {
-        const { setFieldError, clearFieldError } = handleFieldError(formContext);
-        
-        if (fieldValues.firstName.length < 6) {
-            setFieldError('firstName', 'Must have more than 6 caracters');
-        } else {
-            clearFieldError('firstName')
-        }
-        
-        if (fieldValues.lastName.indexOf(' ') < 0) {
-            setFieldError('lastName', 'Must have space between names')
-        } else {
-            clearFieldError('lastName')
-        }
-    }
+  const onLiveErrorFeedback = (validate: Function) => {
+    return [
+      validate('firstName').uppercase().min(6, 'Must have more than 6 caracters').max(8, 'Must have 8 at most'),
+      validate('lastName').lowercase().min(6, 'Must have more than 6 caracters').max(10, 'Must have 10 at most')
+    ]
+  }
 
     return (
         <Form
